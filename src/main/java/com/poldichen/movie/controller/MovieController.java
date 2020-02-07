@@ -4,6 +4,7 @@ import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Resp;
 import com.poldichen.movie.service.inter.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,14 @@ public class MovieController {
         Resp resp = new Resp();
         List<Movie> movies = movieService.getAll();
         resp.setData(movies);
+        return resp;
+    }
+
+    @RequestMapping(value="/movie/{id}", method = RequestMethod.GET)
+    public Resp getById(@PathVariable int id) {
+        Resp resp = new Resp();
+        Movie movie = movieService.getById(id);
+        resp.setData(movie);
         return resp;
     }
 

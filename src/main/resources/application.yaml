@@ -11,4 +11,8 @@ spring:
 mybatis:
   mapper-locations: "com/poldichen/movie/dao/mapper/*.xml"
   configuration:
-    map-underscore-to-camel-case: true #表字段名的下划线转换为实体属性名的驼峰
+    map-underscore-to-camel-case: true
+
+jwt:
+  prefix: marker
+  secret: 123456

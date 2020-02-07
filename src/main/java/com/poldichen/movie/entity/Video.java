@@ -3,16 +3,13 @@ package com.poldichen.movie.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * @author poldi.chen
- * @className Movie
+ * @className Video
  * @description TODO
- * @date 2019/8/26 14:14
+ * @date 2020/2/7 15:08
  **/
-public class Movie {
+public class Video {
 
     @Getter
     @Setter
@@ -24,9 +21,10 @@ public class Movie {
 
     @Getter
     @Setter
-    private Date publishDate;
+    private int size;
 
     @Getter
     @Setter
-    private List<Video> videos;
+    private String extension;
+
 }

@@ -6,4 +6,25 @@
         SELECT * FROM movie
     </select>
 
+
+    <resultMap type="com.poldichen.movie.entity.Movie" id="movieMap">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <collection property="videos" ofType="com.poldichen.movie.entity.Video">
+            <id property="id" column="video_id"/>
+            <result property="name" column="video_name"/>
+        </collection>
+    </resultMap>
+
+    <select id="getById" resultMap="movieMap">
+        SELECT m.id, m.name, v.id as video_id, v.name as video_name
+        FROM movie m left join movie_video mv on m.id = mv.movie_id
+        left join video v on mv.video_id = v.id
+        where m.id = #{id}
+    </select>
+
+
+
+
 </mapper>
