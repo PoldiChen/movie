@@ -27,4 +27,9 @@ public class MovieServiceImpl implements IMovieService {
     public Movie getById(int id) {
         return movieDao.getById(id);
     }
+
+    @Override
+    public int createOne(Movie movie) {
+        return movieDao.createOne(movie);
+    }
 }

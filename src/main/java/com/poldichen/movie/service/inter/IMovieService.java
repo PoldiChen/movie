@@ -9,4 +9,6 @@ public interface IMovieService {
     public List<Movie> getAll();
 
     public Movie getById(int id);
+
+    public int createOne(Movie movie);
 }

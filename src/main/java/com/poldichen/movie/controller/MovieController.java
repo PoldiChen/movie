@@ -1,13 +1,12 @@
 package com.poldichen.movie.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Resp;
 import com.poldichen.movie.service.inter.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,6 +35,17 @@ public class MovieController {
         Resp resp = new Resp();
         Movie movie = movieService.getById(id);
         resp.setData(movie);
+        return resp;
+    }
+
+    @RequestMapping(value="/movie", method = RequestMethod.POST)
+    public Resp createOne(@RequestBody String movieStr) {
+        System.out.println("MovieController@createOne");
+        System.out.println(movieStr);
+        Resp resp = new Resp();
+        Movie movie = JSON.parseObject(movieStr, new TypeReference<Movie>(){});
+        int movieId = movieService.createOne(movie);
+        resp.setData(movieId);
         return resp;
     }
 
