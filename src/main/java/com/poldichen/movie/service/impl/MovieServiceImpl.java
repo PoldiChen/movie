@@ -32,4 +32,9 @@ public class MovieServiceImpl implements IMovieService {
     public int createOne(Movie movie) {
         return movieDao.createOne(movie);
     }
+
+    @Override
+    public int addMovieActor(int movieId, int actorId) {
+        return movieDao.addMovieActor(movieId, actorId);
+    }
 }

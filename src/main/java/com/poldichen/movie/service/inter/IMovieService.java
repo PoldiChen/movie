@@ -11,4 +11,6 @@ public interface IMovieService {
     public Movie getById(int id);
 
     public int createOne(Movie movie);
+
+    public int addMovieActor(int movieId, int actorId);
 }

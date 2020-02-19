@@ -1,6 +1,7 @@
 package com.poldichen.movie.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Resp;
@@ -46,6 +47,18 @@ public class MovieController {
         Movie movie = JSON.parseObject(movieStr, new TypeReference<Movie>(){});
         int movieId = movieService.createOne(movie);
         resp.setData(movieId);
+        return resp;
+    }
+
+    @RequestMapping(value="/movie/actor", method = RequestMethod.POST)
+    public Resp addMovieActor(@RequestBody String paramStr) {
+        System.out.println("MovieController@addMovieActor");
+        Resp resp = new Resp();
+        JSONObject jsonObject = JSON.parseObject(paramStr);
+        int movieId = jsonObject.getInteger("movie_id");
+        int actorId = jsonObject.getInteger("actor_id");
+        int result = movieService.addMovieActor(movieId, actorId);
+        resp.setData(result);
         return resp;
     }
 

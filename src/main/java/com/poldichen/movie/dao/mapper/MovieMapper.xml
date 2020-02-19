@@ -29,6 +29,11 @@
         values (#{movie.name}, #{movie.publishDate})
     </insert>
 
+    <insert id="addMovieActor" parameterType="int" useGeneratedKeys="true" keyProperty="movie.id">
+        insert into movie_actor (movie_id, actor_id)
+        values (#{movie_id}, #{actor_id})
+    </insert>
+
 
 
 

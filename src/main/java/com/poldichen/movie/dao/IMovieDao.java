@@ -12,4 +12,6 @@ public interface IMovieDao {
     public Movie getById(@Param("id") int id);
 
     public int createOne(@Param("movie") Movie movie);
+
+    public int addMovieActor(@Param("movie_id") int movieId, @Param("actor_id") int actorId);
 }
