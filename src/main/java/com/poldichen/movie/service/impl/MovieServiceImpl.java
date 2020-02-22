@@ -20,8 +20,12 @@ public class MovieServiceImpl implements IMovieService {
     @Autowired
     private IMovieDao movieDao;
 
-    public List<Movie> getAll() {
-        return movieDao.getAll();
+    public List<Movie> getAll(String movieName) {
+        if (movieName == null || movieName.equals("")) {
+            return movieDao.getAll();
+        } else {
+            return movieDao.getByName(movieName);
+        }
     }
 
     public Movie getById(int id) {

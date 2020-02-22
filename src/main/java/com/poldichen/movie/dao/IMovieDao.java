@@ -9,6 +9,8 @@ public interface IMovieDao {
 
     public List<Movie> getAll();
 
+    public List<Movie> getByName(@Param("movieName") String movieName);
+
     public Movie getById(@Param("id") int id);
 
     public int createOne(@Param("movie") Movie movie);
