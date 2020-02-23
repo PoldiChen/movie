@@ -3,7 +3,6 @@ package com.poldichen.movie.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.poldichen.movie.entity.Actor;
-import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Resp;
 import com.poldichen.movie.service.inter.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,9 @@ public class ActorController {
     private IActorService actorService;
 
     @RequestMapping(value="/actor", method = RequestMethod.GET)
-    public Resp getAll() {
+    public Resp getAll(@RequestParam(value = "name", required = false) String actorName) {
         Resp resp = new Resp();
-        List<Actor> actors = actorService.getAll();
+        List<Actor> actors = actorService.getAll(actorName);
         resp.setData(actors);
         return resp;
     }

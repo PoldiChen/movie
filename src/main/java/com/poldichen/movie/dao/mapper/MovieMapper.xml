@@ -7,9 +7,8 @@
     </select>
 
     <select id="getByName" resultType="com.poldichen.movie.entity.Movie">
-        SELECT * FROM movie where name = #{movieName}
+        SELECT * FROM movie where name like concat('%', #{movieName}, '%')
     </select>
-
 
     <resultMap type="com.poldichen.movie.entity.Movie" id="movieMap">
         <id property="id" column="id"/>

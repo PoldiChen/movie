@@ -9,6 +9,8 @@ public interface IActorDao {
 
     public List<Actor> getAll();
 
+    public List<Actor> getByName(@Param("actorName") String actorName);
+
     public Actor getById(@Param("id") int id);
 
     public int createOne(@Param("actor") Actor actor);

@@ -21,8 +21,13 @@ public class ActorServiceImpl implements IActorService {
     private IActorDao actorDao;
 
     @Override
-    public List<Actor> getAll() {
-        return actorDao.getAll();
+    public List<Actor> getAll(String actorName) {
+        if (actorName == null || actorName.equals("")) {
+            return actorDao.getAll();
+        } else {
+            return actorDao.getByName(actorName);
+        }
+
     }
 
     @Override

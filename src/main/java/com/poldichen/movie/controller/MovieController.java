@@ -24,7 +24,7 @@ public class MovieController {
     private IMovieService movieService;
 
     @RequestMapping(value="/movie", method = RequestMethod.GET)
-    public Resp getAll(@RequestParam("name") String movieName) {
+    public Resp getAll(@RequestParam(value = "name", required = false) String movieName) {
         System.out.println("MovieController@getAll");
         System.out.println(movieName);
         Resp resp = new Resp();

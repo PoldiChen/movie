@@ -6,6 +6,9 @@
         SELECT * FROM actor
     </select>
 
+    <select id="getByName" resultType="com.poldichen.movie.entity.Actor">
+        SELECT * FROM actor where name like concat('%', #{actorName}, '%')
+    </select>
 
     <resultMap type="com.poldichen.movie.entity.Movie" id="movieMap">
         <id property="id" column="id"/>
