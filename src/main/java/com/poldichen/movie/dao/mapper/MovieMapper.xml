@@ -2,23 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.poldichen.movie.dao.IMovieDao">
 
-    <select id="getAll" resultType="com.poldichen.movie.entity.Movie">
-        SELECT * FROM movie
-    </select>
-
-    <select id="getByName" resultType="com.poldichen.movie.entity.Movie">
-        SELECT * FROM movie where name like concat('%', #{movieName}, '%')
-    </select>
 
     <resultMap type="com.poldichen.movie.entity.Movie" id="movieMap">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
-        <result property="age" column="age"/>
+        <result property="publishDate" column="publish_date"/>
+
+        <collection property="actors" ofType="com.poldichen.movie.entity.Actor">
+            <id property="id" column="actor_id"/>
+            <result property="name" column="actor_name"/>
+        </collection>
+
         <collection property="videos" ofType="com.poldichen.movie.entity.Video">
             <id property="id" column="video_id"/>
             <result property="name" column="video_name"/>
         </collection>
+
     </resultMap>
+
+    <select id="getAll" resultMap="movieMap">
+
+        SELECT m.id, m.name, m.publish_date, v.id as video_id, v.name as video_name, a.id as actor_id, a.name as actor_name
+        FROM movie m left join movie_video mv on m.id = mv.movie_id
+        left join movie_actor ac on m.id = ac.movie_id
+        left join actor a on a.id = ac.actor_id
+        left join video v on mv.video_id = v.id
+
+    </select>
+
+    <select id="getByName" resultMap="movieMap">
+
+        SELECT m.id, m.name, m.publish_date, v.id as video_id, v.name as video_name, a.id as actor_id, a.name as actor_name
+        FROM movie m left join movie_video mv on m.id = mv.movie_id
+        left join movie_actor ac on m.id = ac.movie_id
+        left join actor a on a.id = ac.actor_id
+        left join video v on mv.video_id = v.id
+        where m.name like concat('%', #{movieName}, '%')
+    </select>
 
     <select id="getById" resultMap="movieMap">
         SELECT m.id, m.name, v.id as video_id, v.name as video_name
@@ -31,6 +51,10 @@
         insert into movie (name, publish_date)
         values (#{movie.name}, #{movie.publishDate})
     </insert>
+
+    <delete id="deleteMovieActor">
+        delete from movie_actor where movie_id = #{movie_id}
+    </delete>
 
     <insert id="addMovieActor" parameterType="int" useGeneratedKeys="true" keyProperty="movie.id">
         insert into movie_actor (movie_id, actor_id)

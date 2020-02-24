@@ -29,4 +29,8 @@ public class Movie {
     @Getter
     @Setter
     private List<Video> videos;
+
+    @Getter
+    @Setter
+    private List<Actor> actors;
 }

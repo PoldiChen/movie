@@ -2,23 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.poldichen.movie.dao.IActorDao">
 
-    <select id="getAll" resultType="com.poldichen.movie.entity.Actor">
-        SELECT * FROM actor
-    </select>
-
-    <select id="getByName" resultType="com.poldichen.movie.entity.Actor">
-        SELECT * FROM actor where name like concat('%', #{actorName}, '%')
-    </select>
-
-    <resultMap type="com.poldichen.movie.entity.Movie" id="movieMap">
+    <resultMap type="com.poldichen.movie.entity.Actor" id="actorMap">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
-        <result property="age" column="age"/>
-        <collection property="videos" ofType="com.poldichen.movie.entity.Video">
-            <id property="id" column="video_id"/>
-            <result property="name" column="video_name"/>
+        <result property="birthDate" column="birth_date"/>
+        <result property="nationality" column="nationality" />
+
+        <collection property="covers" ofType="com.poldichen.movie.entity.Cover">
+            <id property="id" column="cover_id"/>
+            <result property="path" column="cover_path"/>
+            <result property="fileName" column="cover_file_name"/>
+            <result property="extension" column="cover_extension"/>
+            <result property="size" column="cover_size"/>
         </collection>
+
     </resultMap>
+
+    <select id="getAll" resultMap="actorMap">
+        select a.*, c.id as cover_id, c.path as cover_path, c.file_name as cover_file_name, c.extension as cover_extension, c.size as cover_size
+        from actor a left join actor_cover ac on a.id = ac.actor_id
+        left join cover c on c.id = ac.cover_id
+    </select>
+
+    <select id="getByName" resultMap="actorMap">
+        select a.*, c.id as cover_id, c.path as cover_path, c.file_name as cover_file_name, c.extension as cover_extension, c.size as cover_size
+        from actor a left join actor_cover ac on a.id = ac.actor_id
+        left join cover c on c.id = ac.cover_id
+        where a.name like concat('%', #{actorName}, '%')
+    </select>
 
     <select id="getById" resultType="com.poldichen.movie.entity.Actor">
         SELECT * from actor where id = #{id}

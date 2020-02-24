@@ -17,7 +17,7 @@ public class FileUtil {
     }
 
     public static void initMovieName() {
-        String path = "F:\\新建文件夹 (2)\\2.storage";
+        String path = "H:\\新建文件夹\\@rename";
         File pathFile = new File(path);
         File[] files = pathFile.listFiles();
         System.out.println(files.length);
@@ -33,7 +33,8 @@ public class FileUtil {
             Map<String, String> params = new HashMap<>();
             params.put("name", fileName);
             params.put("publish_date", "2020-02-23");
-            HttpClientUtil.doPost("http://114.67.87.197:8080/movie", "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgyNDQ0NjczfQ.iguY3PZsBuMKSBY6ZEDMhTIixilK8KGiPPaTa-SdmIAlawPAC2-mimgVOLHEi3xeYiqFBRDQtp7oz_HOkrI37Q",
+            HttpClientUtil.doPost("http://localhost:8080/movie",
+                    "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgyNDYyMTU1fQ.Z-SrokoXZM-Dwja19EvOgWi9MpmkgNDza7wF2ib0EBGyeUsiAcl707tRfM-ySslINVv6DvTdnxD0GSgg93oxAw",
                     params);
 
 //            System.out.println(fileName);

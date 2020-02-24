@@ -3,16 +3,13 @@ package com.poldichen.movie.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * @author poldi.chen
- * @className Actor
+ * @className Cover
  * @description TODO
- * @date 2020/2/18 22:07
+ * @date 2020/2/24 22:10
  **/
-public class Actor {
+public class Cover {
 
     @Getter
     @Setter
@@ -20,17 +17,17 @@ public class Actor {
 
     @Getter
     @Setter
-    private String name;
+    private String path;
 
     @Getter
     @Setter
-    private Date birthDate;
+    private String fileName;
 
     @Getter
     @Setter
-    private String nationality;
+    private String extension;
 
     @Getter
     @Setter
-    private List<Cover> covers;
+    private int size;
 }
