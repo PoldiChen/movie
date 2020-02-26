@@ -14,4 +14,6 @@ public interface IActorDao {
     public Actor getById(@Param("id") int id);
 
     public int createOne(@Param("actor") Actor actor);
+
+    public int update(@Param("id") int id, @Param("actor") Actor actor);
 }

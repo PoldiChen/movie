@@ -39,4 +39,9 @@ public class ActorServiceImpl implements IActorService {
     public int createOne(Actor actor) {
         return actorDao.createOne(actor);
     }
+
+    @Override
+    public int update(int id, Actor actor) {
+        return actorDao.update(id, actor);
+    }
 }

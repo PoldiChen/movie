@@ -11,4 +11,6 @@ public interface IActorService {
     public Actor getById(int id);
 
     public int createOne(Actor actor);
+
+    public int update(int id, Actor actor);
 }

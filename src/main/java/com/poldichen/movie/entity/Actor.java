@@ -32,5 +32,9 @@ public class Actor {
 
     @Getter
     @Setter
+    private int search;
+
+    @Getter
+    @Setter
     private List<Cover> covers;
 }

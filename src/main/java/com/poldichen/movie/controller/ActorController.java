@@ -48,4 +48,13 @@ public class ActorController {
         resp.setData(actorId);
         return resp;
     }
+
+    @RequestMapping(value="/actor/{id}", method = RequestMethod.PUT)
+    public Resp update(@PathVariable int id, @RequestBody String actorStr) {
+        Resp resp = new Resp();
+        Actor actor = JSON.parseObject(actorStr, new TypeReference<Actor>(){});
+        int result = actorService.update(id, actor);
+        resp.setData(result);
+        return resp;
+    }
 }
