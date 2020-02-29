@@ -12,5 +12,7 @@ public interface IMovieService {
 
     public int createOne(Movie movie);
 
+    public int update(int id, Movie movie);
+
     public int updateMovieActor(int movieId, List<Integer> actorIds);
 }

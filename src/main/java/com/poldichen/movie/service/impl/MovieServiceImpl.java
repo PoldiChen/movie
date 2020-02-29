@@ -38,6 +38,11 @@ public class MovieServiceImpl implements IMovieService {
     }
 
     @Override
+    public int update(int id, Movie movie) {
+        return movieDao.update(id, movie);
+    }
+
+    @Override
     public int updateMovieActor(int movieId, List<Integer> actorIds) {
         movieDao.deleteMovieActor(movieId);
         for (int actorId : actorIds) {

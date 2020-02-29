@@ -53,6 +53,15 @@ public class MovieController {
         return resp;
     }
 
+    @RequestMapping(value="/movie/{id}", method = RequestMethod.PUT)
+    public Resp update(@PathVariable int id, @RequestBody String movieStr) {
+        Resp resp = new Resp();
+        Movie movie = JSON.parseObject(movieStr, new TypeReference<Movie>(){});
+        int result = movieService.update(id, movie);
+        resp.setData(result);
+        return resp;
+    }
+
     @RequestMapping(value="/movie/{movieId}/actor", method = RequestMethod.PUT)
     public Resp updateMovieActor(@PathVariable("movieId") int movieId, @RequestBody String paramStr) {
         System.out.println("MovieController@updateMovieActor");

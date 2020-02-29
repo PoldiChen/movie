@@ -30,7 +30,7 @@ public class FileUtil {
                 fileName = fileName.substring(fileName.indexOf("--") + 2);
             }
 
-            Map<String, String> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<>();
             params.put("name", fileName);
             params.put("publish_date", "2020-02-23");
             HttpClientUtil.doPost("http://localhost:8080/movie",

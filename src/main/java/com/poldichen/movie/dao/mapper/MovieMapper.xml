@@ -7,6 +7,8 @@
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="publishDate" column="publish_date"/>
+        <result property="createAt" column="create_at" />
+        <result property="updateAt" column="update_at" />
 
         <collection property="actors" ofType="com.poldichen.movie.entity.Actor">
             <id property="id" column="actor_id"/>
@@ -48,9 +50,15 @@
     </select>
 
     <insert id="createOne" parameterType="com.poldichen.movie.entity.Movie" useGeneratedKeys="true" keyProperty="movie.id">
-        insert into movie (name, publish_date)
-        values (#{movie.name}, #{movie.publishDate})
+        insert into movie (name, publish_date, create_at, update_at)
+        values (#{movie.name}, #{movie.publishDate}, NOW(), NOW())
     </insert>
+
+    <update id="update">
+        update movie
+        set name = #{movie.name}, publish_date = #{movie.publishDate}, update_at = NOW()
+        where id = #{id}
+    </update>
 
     <delete id="deleteMovieActor">
         delete from movie_actor where movie_id = #{movie_id}

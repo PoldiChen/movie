@@ -27,13 +27,13 @@ public class HttpClientUtil {
         String auth = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgyNDQ0NjczfQ.iguY3PZsBuMKSBY6ZEDMhTIixilK8KGiPPaTa-SdmIAlawPAC2-mimgVOLHEi3xeYiqFBRDQtp7oz_HOkrI37Q";
 //        doGet("http://114.67.87.197:8080/movie", auth);
 
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "ttt");
         params.put("publish_date", "2020-02-23");
         doPost("http://114.67.87.197:8080/movie", auth, params);
     }
 
-    public static void doGet(String url, String auth) {
+    public static String doGet(String url, String auth) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -43,18 +43,21 @@ public class HttpClientUtil {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
         String responseStr = response.getBody();
         System.out.println(responseStr);
+        return responseStr;
     }
 
-    public static void doPost(String url, String auth, Map<String, String> requestBody) {
+    public static String doPost(String url, String auth, Map<String, Object> requestBody) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", auth);
+        headers.add("content-type", "text/html;charset=utf-8");
         HttpEntity<String> requestEntity = new HttpEntity<>(JSONObject.toJSONString(requestBody), headers);
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
         String responseStr = response.getBody();
-        System.out.println(responseStr);
+        return responseStr;
+//        System.out.println(responseStr);
 
     }
 

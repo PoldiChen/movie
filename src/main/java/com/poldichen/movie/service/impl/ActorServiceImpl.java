@@ -6,6 +6,7 @@ import com.poldichen.movie.service.inter.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,6 @@ public class ActorServiceImpl implements IActorService {
         } else {
             return actorDao.getByName(actorName);
         }
-
     }
 
     @Override

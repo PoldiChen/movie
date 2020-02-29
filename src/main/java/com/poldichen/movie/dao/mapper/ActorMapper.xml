@@ -8,6 +8,8 @@
         <result property="birthDate" column="birth_date"/>
         <result property="nationality" column="nationality" />
         <result property="search" column="search" />
+        <result property="createAt" column="create_at" />
+        <result property="updateAt" column="update_at" />
 
         <collection property="covers" ofType="com.poldichen.movie.entity.Cover">
             <id property="id" column="cover_id"/>
@@ -37,12 +39,13 @@
     </select>
 
     <insert id="createOne" parameterType="com.poldichen.movie.entity.Actor" useGeneratedKeys="true" keyProperty="actor.id">
-        insert into actor (name, birth_date, nationality, search)
-        values (#{actor.name}, #{actor.birthDate}, #{actor.nationality}, #{actor.search})
+        insert into actor (name, birth_date, nationality, search, create_at, update_at)
+        values (#{actor.name}, #{actor.birthDate}, #{actor.nationality}, #{actor.search}, NOW(), NOW())
     </insert>
 
     <update id="update">
-        update actor set name = #{actor.name}, birth_date = #{actor.birthDate}, nationality = #{actor.nationality}, search = #{actor.search}
+        update actor
+        set name = #{actor.name}, birth_date = #{actor.birthDate}, nationality = #{actor.nationality}, search = #{actor.search}, update_at = NOW()
         where id = #{id}
     </update>
 

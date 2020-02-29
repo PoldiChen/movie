@@ -1,5 +1,6 @@
 package com.poldichen.movie.dao;
 
+import com.poldichen.movie.entity.Actor;
 import com.poldichen.movie.entity.Movie;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,6 +15,8 @@ public interface IMovieDao {
     public Movie getById(@Param("id") int id);
 
     public int createOne(@Param("movie") Movie movie);
+
+    public int update(@Param("id") int id, @Param("movie") Movie movie);
 
     public int deleteMovieActor(@Param("movie_id") int movieId);
 
