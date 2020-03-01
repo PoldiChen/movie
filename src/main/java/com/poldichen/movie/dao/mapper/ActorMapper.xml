@@ -11,26 +11,26 @@
         <result property="createAt" column="create_at" />
         <result property="updateAt" column="update_at" />
 
-        <collection property="covers" ofType="com.poldichen.movie.entity.Cover">
-            <id property="id" column="cover_id"/>
-            <result property="path" column="cover_path"/>
-            <result property="fileName" column="cover_file_name"/>
-            <result property="extension" column="cover_extension"/>
-            <result property="size" column="cover_size"/>
+        <collection property="covers" ofType="com.poldichen.movie.entity.Picture">
+            <id property="id" column="picture_id"/>
+            <result property="path" column="picture_path"/>
+            <result property="fileName" column="picture_file_name"/>
+            <result property="extension" column="picture_extension"/>
+            <result property="size" column="picture_size"/>
         </collection>
 
     </resultMap>
 
     <select id="getAll" resultMap="actorMap">
-        select a.*, c.id as cover_id, c.path as cover_path, c.file_name as cover_file_name, c.extension as cover_extension, c.size as cover_size
+        select a.*, p.id as picture_id, p.path as picture_path, p.file_name as picture_file_name, p.extension as picture_extension, p.size as picture_size
         from actor a left join actor_cover ac on a.id = ac.actor_id
-        left join cover c on c.id = ac.cover_id
+        left join picture p on c.id = ac.picture_id
     </select>
 
     <select id="getByName" resultMap="actorMap">
-        select a.*, c.id as cover_id, c.path as cover_path, c.file_name as cover_file_name, c.extension as cover_extension, c.size as cover_size
+        select a.*, p.id as picture_id, p.path as picture_path, p.file_name as picture_file_name, p.extension as picture_extension, p.size as picture_size
         from actor a left join actor_cover ac on a.id = ac.actor_id
-        left join cover c on c.id = ac.cover_id
+        left join picture p on c.id = ac.picture_id
         where a.name like concat('%', #{actorName}, '%')
     </select>
 
@@ -38,7 +38,7 @@
         SELECT * from actor where id = #{id}
     </select>
 
-    <insert id="createOne" parameterType="com.poldichen.movie.entity.Actor" useGeneratedKeys="true" keyProperty="actor.id">
+    <insert id="createOne" parameterType="com.poldichen.movie.entity.Actor" useGeneratedKeys="true" keyProperty="actor.id" keyColumn="id">
         insert into actor (name, birth_date, nationality, search, create_at, update_at)
         values (#{actor.name}, #{actor.birthDate}, #{actor.nationality}, #{actor.search}, NOW(), NOW())
     </insert>
@@ -48,6 +48,15 @@
         set name = #{actor.name}, birth_date = #{actor.birthDate}, nationality = #{actor.nationality}, search = #{actor.search}, update_at = NOW()
         where id = #{id}
     </update>
+
+    <delete id="deleteActorCover">
+        delete from actor_cover where actor_id = #{actor_id}
+    </delete>
+
+    <insert id="addActorCover" parameterType="int" useGeneratedKeys="true" keyProperty="actor.id">
+        insert into actor_cover (actor_id, picture_id)
+        values (#{actor_id}, #{picture_id})
+    </insert>
 
 
 

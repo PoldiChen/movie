@@ -5,8 +5,13 @@
 
     <resultMap type="com.poldichen.movie.entity.Movie" id="movieMap">
         <id property="id" column="id"/>
+        <result property="code" column="code"/>
         <result property="name" column="name"/>
         <result property="publishDate" column="publish_date"/>
+        <result property="length" column="length" />
+        <result property="type" column="type" />
+        <result property="producer" column="producer" />
+        <result property="publisher" column="publisher" />
         <result property="createAt" column="create_at" />
         <result property="updateAt" column="update_at" />
 
@@ -24,7 +29,7 @@
 
     <select id="getAll" resultMap="movieMap">
 
-        SELECT m.id, m.name, m.publish_date, v.id as video_id, v.name as video_name, a.id as actor_id, a.name as actor_name
+        SELECT m.*, v.id as video_id, v.name as video_name, a.id as actor_id, a.name as actor_name
         FROM movie m left join movie_video mv on m.id = mv.movie_id
         left join movie_actor ac on m.id = ac.movie_id
         left join actor a on a.id = ac.actor_id
@@ -34,7 +39,7 @@
 
     <select id="getByName" resultMap="movieMap">
 
-        SELECT m.id, m.name, m.publish_date, v.id as video_id, v.name as video_name, a.id as actor_id, a.name as actor_name
+        SELECT m.*, v.id as video_id, v.name as video_name, a.id as actor_id, a.name as actor_name
         FROM movie m left join movie_video mv on m.id = mv.movie_id
         left join movie_actor ac on m.id = ac.movie_id
         left join actor a on a.id = ac.actor_id
@@ -43,20 +48,21 @@
     </select>
 
     <select id="getById" resultMap="movieMap">
-        SELECT m.id, m.name, v.id as video_id, v.name as video_name
+        SELECT m.*, v.id as video_id, v.name as video_name
         FROM movie m left join movie_video mv on m.id = mv.movie_id
         left join video v on mv.video_id = v.id
         where m.id = #{id}
     </select>
 
-    <insert id="createOne" parameterType="com.poldichen.movie.entity.Movie" useGeneratedKeys="true" keyProperty="movie.id">
-        insert into movie (name, publish_date, create_at, update_at)
-        values (#{movie.name}, #{movie.publishDate}, NOW(), NOW())
+    <insert id="createOne" parameterType="com.poldichen.movie.entity.Movie" useGeneratedKeys="true" keyProperty="movie.id" keyColumn="id">
+        insert into movie (code, name, publish_date, length, type, producer, publisher, create_at, update_at)
+        values (#{movie.code}, #{movie.name}, #{movie.publishDate}, #{movie.length}, #{movie.type}, #{movie.producer}, #{movie.publisher}, NOW(), NOW())
     </insert>
 
     <update id="update">
         update movie
-        set name = #{movie.name}, publish_date = #{movie.publishDate}, update_at = NOW()
+        set code = #{movie.code}, name = #{movie.name}, publish_date = #{movie.publishDate},
+        length = #{movie.length}, type = #{movie.type}, producer = #{movie.producer}, publisher = #{movie.publisher}, update_at = NOW()
         where id = #{id}
     </update>
 
@@ -70,6 +76,42 @@
     </insert>
 
 
+    <delete id="deleteMovieCover">
+        delete from movie_cover where movie_id = #{movie_id}
+    </delete>
+
+    <insert id="addMovieCover" parameterType="int" useGeneratedKeys="true" keyProperty="movie.id">
+        insert into movie_cover (movie_id, picture_id)
+        values (#{movie_id}, #{picture_id})
+    </insert>
+
+    <delete id="deleteMovieCoverDetail">
+        delete from movie_cover_detail where movie_id = #{movie_id}
+    </delete>
+
+    <insert id="addMovieCoverDetail" parameterType="int" useGeneratedKeys="true" keyProperty="movie.id">
+        insert into movie_cover_detail (movie_id, picture_id)
+        values (#{movie_id}, #{picture_id})
+    </insert>
+
+    <delete id="deleteMovieScreenshot">
+        delete from movie_screenshot where movie_id = #{movie_id}
+    </delete>
+
+    <insert id="addMovieScreenshot" parameterType="int" useGeneratedKeys="true" keyProperty="movie.id">
+        insert into movie_screenshot (movie_id, picture_id)
+        values (#{movie_id}, #{picture_id})
+    </insert>
+
+
+    <delete id="deleteMovieResource">
+        delete from movie_resource where movie_id = #{movie_id}
+    </delete>
+
+    <insert id="addMovieResource" parameterType="int" useGeneratedKeys="true" keyProperty="movie.id">
+        insert into movie_resource (movie_id, resource_id)
+        values (#{movie_id}, #{resource_id})
+    </insert>
 
 
 </mapper>

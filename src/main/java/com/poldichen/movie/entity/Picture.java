@@ -5,11 +5,11 @@ import lombok.Setter;
 
 /**
  * @author poldi.chen
- * @className Cover
+ * @className Picture
  * @description TODO
  * @date 2020/2/24 22:10
  **/
-public class Cover {
+public class Picture {
 
     @Getter
     @Setter

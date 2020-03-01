@@ -2,6 +2,7 @@ package com.poldichen.movie.service.impl;
 
 import com.poldichen.movie.dao.IActorDao;
 import com.poldichen.movie.entity.Actor;
+import com.poldichen.movie.entity.Picture;
 import com.poldichen.movie.service.inter.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,13 @@ public class ActorServiceImpl implements IActorService {
 
     @Override
     public int createOne(Actor actor) {
-        return actorDao.createOne(actor);
+        actorDao.createOne(actor);
+        int actorId = actor.getId();
+        List<Picture> covers = actor.getCovers();
+        for (Picture picture : covers) {
+            actorDao.addActorCover(actorId, picture.getId());
+        }
+        return actor.getId();
     }
 
     @Override

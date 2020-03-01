@@ -21,4 +21,21 @@ public interface IMovieDao {
     public int deleteMovieActor(@Param("movie_id") int movieId);
 
     public int addMovieActor(@Param("movie_id") int movieId, @Param("actor_id") int actorId);
+
+    public int deleteMovieCover(@Param("movie_id") int movieId);
+
+    public int addMovieCover(@Param("movie_id") int movieId, @Param("picture_id") int pictureId);
+
+    public int deleteMovieCoverDetail(@Param("movie_id") int movieId);
+
+    public int addMovieCoverDetail(@Param("movie_id") int movieId, @Param("picture_id") int pictureId);
+
+
+    public int deleteMovieScreenshot(@Param("movie_id") int movieId);
+
+    public int addMovieScreenshot(@Param("movie_id") int movieId, @Param("picture_id") int pictureId);
+
+    public int deleteMovieResource(@Param("movie_id") int movieId);
+
+    public int addMovieResource(@Param("movie_id") int movieId, @Param("resource_id") int resourceId);
 }

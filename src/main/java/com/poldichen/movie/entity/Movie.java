@@ -22,12 +22,32 @@ public class Movie {
 
     @Getter
     @Setter
+    private String code;
+
+    @Getter
+    @Setter
     private String name;
 
     @Getter
     @Setter
     @JsonFormat(pattern = Constants.DATE_FORMAT)
     private Date publishDate;
+
+    @Getter
+    @Setter
+    private String length;
+
+    @Getter
+    @Setter
+    private String type;
+
+    @Getter
+    @Setter
+    private String producer;
+
+    @Getter
+    @Setter
+    private String publisher;
 
     @Getter
     @Setter
@@ -46,4 +66,20 @@ public class Movie {
     @Getter
     @Setter
     private List<Actor> actors;
+
+    @Getter
+    @Setter
+    private List<Picture> covers;
+
+    @Getter
+    @Setter
+    private List<Picture> coverDetails;
+
+    @Getter
+    @Setter
+    private List<Picture> screenshots;
+
+    @Getter
+    @Setter
+    private List<Resource> resources;
 }

@@ -49,5 +49,5 @@ public class Actor {
 
     @Getter
     @Setter
-    private List<Cover> covers;
+    private List<Picture> covers;
 }

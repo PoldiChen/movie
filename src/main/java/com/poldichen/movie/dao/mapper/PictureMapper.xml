@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poldichen.movie.dao.IPictureDao">
+
+
+
+    <insert id="createOne" parameterType="com.poldichen.movie.entity.Picture" useGeneratedKeys="true" keyProperty="picture.id" keyColumn="id">
+        insert into picture (path, file_name, extension, size)
+        values (#{picture.path}, #{picture.fileName}, #{picture.extension}, #{picture.size})
+    </insert>
+
+    <update id="update">
+        update picture
+        set path = #{picture.path}, file_name = #{picture.fileName}, extension = #{picture.extension}, size = #{picture.size},
+        where id = #{id}
+    </update>
+
+
+
+
+</mapper>

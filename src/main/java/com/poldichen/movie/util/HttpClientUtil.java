@@ -24,7 +24,7 @@ import java.util.Map;
 public class HttpClientUtil {
 
     public static void main(String[] args) {
-        String auth = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgyNDQ0NjczfQ.iguY3PZsBuMKSBY6ZEDMhTIixilK8KGiPPaTa-SdmIAlawPAC2-mimgVOLHEi3xeYiqFBRDQtp7oz_HOkrI37Q";
+        String auth = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgzMDczMjM1fQ.AVGNXMIyw0zl3IbT9Nsj7vKMINSr6uzOaK-TTa90jeDHhepwyFusvKXyx4hg8vzhtAFonhLJfKu5_AfSoBa0YA";
 //        doGet("http://114.67.87.197:8080/movie", auth);
 
         Map<String, Object> params = new HashMap<>();
@@ -57,8 +57,6 @@ public class HttpClientUtil {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
         String responseStr = response.getBody();
         return responseStr;
-//        System.out.println(responseStr);
-
     }
 
 }

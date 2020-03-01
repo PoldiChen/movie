@@ -1,7 +1,10 @@
 package com.poldichen.movie.service.impl;
 
 import com.poldichen.movie.dao.IMovieDao;
+import com.poldichen.movie.entity.Actor;
 import com.poldichen.movie.entity.Movie;
+import com.poldichen.movie.entity.Picture;
+import com.poldichen.movie.entity.Resource;
 import com.poldichen.movie.service.inter.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +37,35 @@ public class MovieServiceImpl implements IMovieService {
 
     @Override
     public int createOne(Movie movie) {
-        return movieDao.createOne(movie);
+        movieDao.createOne(movie);
+        int movieId = movie.getId();
+
+        List<Actor> actors = movie.getActors();
+        for (Actor actor : actors) {
+            movieDao.addMovieActor(movieId, actor.getId());
+        }
+
+        List<Picture> covers = movie.getCovers();
+        for (Picture picture : covers) {
+            movieDao.addMovieCover(movieId, picture.getId());
+        }
+
+        List<Picture> coverDetails = movie.getCoverDetails();
+        for (Picture picture : coverDetails) {
+            movieDao.addMovieCoverDetail(movieId, picture.getId());
+        }
+
+        List<Picture> screenshots = movie.getScreenshots();
+        for (Picture picture : screenshots) {
+            movieDao.addMovieScreenshot(movieId, picture.getId());
+        }
+
+        List<Resource> resources = movie.getResources();
+        for (Resource resource : resources) {
+            movieDao.addMovieResource(movieId, resource.getId());
+        }
+
+        return movieId;
     }
 
     @Override

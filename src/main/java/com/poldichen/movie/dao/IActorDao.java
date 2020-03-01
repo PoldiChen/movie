@@ -16,4 +16,8 @@ public interface IActorDao {
     public int createOne(@Param("actor") Actor actor);
 
     public int update(@Param("id") int id, @Param("actor") Actor actor);
+
+    public int deleteActorCover(@Param("actor_id") int actorId);
+
+    public int addActorCover(@Param("actor_id") int actorId, @Param("picture_id") int pictureId);
 }
