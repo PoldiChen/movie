@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -33,13 +34,14 @@ public class HttpClientUtil {
         doPost("http://114.67.87.197:8080/movie", auth, params);
     }
 
-    public static String doGet(String url, String auth) {
+    public static String doGet(String url, Map<String, String> headerParams) {
         RestTemplate restTemplate = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", auth);
+        Set<String> keySet = headerParams.keySet();
+        for (String key : keySet) {
+            headers.add(key, headerParams.get(key));
+        }
         HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
-
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
         String responseStr = response.getBody();
         System.out.println(responseStr);
@@ -55,6 +57,17 @@ public class HttpClientUtil {
         HttpEntity<String> requestEntity = new HttpEntity<>(JSONObject.toJSONString(requestBody), headers);
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        String responseStr = response.getBody();
+        return responseStr;
+    }
+
+    public static String doPut(String url, String auth, Map<String, Object> requestBody) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", auth);
+        headers.add("content-type", "text/html;charset=utf-8");
+        HttpEntity<String> requestEntity = new HttpEntity<>(JSONObject.toJSONString(requestBody), headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
         String responseStr = response.getBody();
         return responseStr;
     }

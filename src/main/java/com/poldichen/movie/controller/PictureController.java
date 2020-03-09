@@ -10,6 +10,8 @@ import com.poldichen.movie.service.inter.IResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author poldi.chen
  * @className PictureController
@@ -21,6 +23,15 @@ public class PictureController {
 
     @Autowired
     private IPictureService pictureService;
+
+
+    @RequestMapping(value = "/picture", method = RequestMethod.GET)
+    public Resp getAll(@RequestParam(value = "file_name", required = false) String fileName) {
+        Resp resp = new Resp();
+        List<Picture> pictures = pictureService.getAll(fileName);
+        resp.setData(pictures);
+        return resp;
+    }
 
     @RequestMapping(value = "/picture", method = RequestMethod.POST)
     public Resp createOne(@RequestBody String pictureStr) {

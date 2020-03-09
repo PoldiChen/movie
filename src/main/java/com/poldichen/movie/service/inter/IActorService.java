@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface IActorService {
 
-    public List<Actor> getAll(String actorName);
+    List<Actor> getAll(String actorName);
 
-    public Actor getById(int id);
+    Actor getById(int id);
 
-    public int createOne(Actor actor);
+    int createOne(Actor actor);
 
-    public int update(int id, Actor actor);
+    int update(int id, Actor actor);
 }

@@ -1,14 +1,20 @@
 package com.poldichen.movie.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.poldichen.movie.entity.Movie;
+import com.poldichen.movie.entity.Picture;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,20 +26,68 @@ import java.util.Map;
 public class MovieApiUtil {
 
     private static final String URL_ADD_MOVIE = "http://localhost:8080/movie";
+    private static final String URL_SEARCH_MOVIE = "http://localhost:8080/movie";
+    private static final String URL_UPDATE_MOVIE_RESOURCE = "http://localhost:8080/movie";
 
     private static final String URL_SEARCH_ACTOR = "http://localhost:8080/actor";
-
     private static final String URL_ADD_ACTOR = "http://localhost:8080/actor";
+    private static final String URL_UPDATE_ACTOR = "http://localhost:8080/actor";
 
     private static final String URL_ADD_PICTURE = "http://localhost:8080/picture";
+    private static final String URL_SEARCH_PICTURE = "http://localhost:8080/picture";
 
-    private static final String AUTH = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgzNDM0MzM2fQ.EhHGVyHWXAXb7IJ1lZN6FTX3Ex83QU_NmLINF5OEYjVv3tqmj9-49GZ3maJodIUC1ZrdzCXQI3pGarId5zvpfQ";
+    private static final String URL_ADD_SYSTEM_LOG = "http://localhost:8080/system_log";
 
-    public static void main(String[] args) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("path", "/");
-        params.put("file_name", "test.jpg");
-        System.out.println(addPicture(params));
+    private static final String URL_ADD_RESOURCE = "http://localhost:8080/resource";
+
+    private static final String AUTH
+            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgzNzA2MDkyfQ.TMPG-tnO9gRgLAFpuyO3bLoRLckWKlJq3lnAuq0b-Cz6iKVeJ76dDX3bcPOx_p3oYB9aVHTukVy4bz-L7Az_8g";
+
+
+    public static int updateActor(int actorId, Map<String, Object> params) {
+        String response = HttpClientUtil.doPut(URL_UPDATE_ACTOR + "/" + actorId, AUTH, params);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        int result = jsonObject.getInteger("data");
+        return result;
+    }
+
+    public static int updateMovieResource(int movieId, Map<String, Object> params) {
+        String response = HttpClientUtil.doPut(URL_UPDATE_MOVIE_RESOURCE + "/" + movieId + "/resource", AUTH, params);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        int result = jsonObject.getInteger("data");
+        return result;
+    }
+
+    public static int addSystemLog(Map<String, Object> params) {
+        String response = HttpClientUtil.doPost(URL_ADD_SYSTEM_LOG, AUTH, params);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        int result = jsonObject.getInteger("data");
+        return result;
+    }
+
+    public static int addResource(Map<String, Object> params) {
+        String response = HttpClientUtil.doPost(URL_ADD_RESOURCE, AUTH, params);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        int result = jsonObject.getInteger("data");
+        return result;
+    }
+
+    public static List<Picture> getPicture(String fileName) {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put("Authorization", AUTH);
+        String response = HttpClientUtil.doGet(URL_SEARCH_PICTURE + "?file_name=" + fileName, headerParams);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        List<Picture> pictures = JSON.parseObject(jsonObject.getString("data"), new TypeReference<List<Picture>>(){});
+        return pictures;
+    }
+
+    public static List<Movie> getAllMovie() {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put("Authorization", AUTH);
+        String response = HttpClientUtil.doGet(URL_SEARCH_MOVIE, headerParams);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        List<Movie> movies = JSON.parseObject(jsonObject.getString("data"), new TypeReference<List<Movie>>(){});
+        return movies;
     }
 
     public static int addPicture(Map<String, Object> params) {
@@ -54,11 +108,32 @@ public class MovieApiUtil {
         return result;
     }
 
-    public static boolean isActorExist(String actorName) {
-        String response = HttpClientUtil.doGet(URL_SEARCH_ACTOR + "?name=" + actorName, AUTH);
+    public static int isActorExist(String actorName) {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put("Authorization", AUTH);
+        String response = HttpClientUtil.doGet(URL_SEARCH_ACTOR + "?name=" + actorName, headerParams);
         JSONObject responseObject = JSONObject.parseObject(response);
         JSONArray data = responseObject.getJSONArray("data");
-        return data.size() > 0;
+        if (data.size() == 0) {
+            return 0;
+        } else {
+            JSONObject actorObject = JSONObject.parseObject(data.get(0).toString());
+            return actorObject.getInteger("id");
+        }
+    }
+
+    public static int isMovieExist(String movieCode) {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put("Authorization", AUTH);
+        String response = HttpClientUtil.doGet(URL_SEARCH_MOVIE + "?code=" + movieCode, headerParams);
+        JSONObject responseObject = JSONObject.parseObject(response);
+        JSONArray data = responseObject.getJSONArray("data");
+        if (data.size() == 0) {
+            return 0;
+        } else {
+            JSONObject movieObject = JSONObject.parseObject(data.get(0).toString());
+            return movieObject.getInteger("id");
+        }
     }
 
     public static void getAuth(String userName, String password) {

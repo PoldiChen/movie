@@ -10,7 +10,7 @@ import com.poldichen.movie.entity.User;
  **/
 public interface IUserService {
 
-    public int createOne(User user);
+    int createOne(User user);
 
-    public User getByName(String userName);
+    User getByName(String userName);
 }

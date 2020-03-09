@@ -5,8 +5,8 @@ import org.apache.ibatis.annotations.Param;
 
 public interface IResourceDao {
 
-    public int createOne(@Param("resource")Resource resource);
+    int createOne(@Param("resource")Resource resource);
 
-    public int update(@Param("id") int id, @Param("resource") Resource resource);
+    int update(@Param("id") int id, @Param("resource") Resource resource);
 
 }

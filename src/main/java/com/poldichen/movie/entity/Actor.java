@@ -26,12 +26,32 @@ public class Actor {
 
     @Getter
     @Setter
+    private String englishName;
+
+    @Getter
+    @Setter
+    private String height;
+
+    @Getter
+    @Setter
     @JsonFormat(pattern = Constants.DATE_FORMAT)
     private Date birthDate;
 
     @Getter
     @Setter
+    private String age;
+
+    @Getter
+    @Setter
     private String nationality;
+
+    @Getter
+    @Setter
+    private String birthPlace;
+
+    @Getter
+    @Setter
+    private String hobby;
 
     @Getter
     @Setter

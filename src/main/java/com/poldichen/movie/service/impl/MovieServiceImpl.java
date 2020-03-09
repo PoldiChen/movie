@@ -1,5 +1,7 @@
 package com.poldichen.movie.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.poldichen.movie.dao.IMovieDao;
 import com.poldichen.movie.entity.Actor;
 import com.poldichen.movie.entity.Movie;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author poldi.chen
@@ -23,12 +26,12 @@ public class MovieServiceImpl implements IMovieService {
     @Autowired
     private IMovieDao movieDao;
 
-    public List<Movie> getAll(String movieName) {
-        if (movieName == null || movieName.equals("")) {
-            return movieDao.getAll();
-        } else {
-            return movieDao.getByName(movieName);
-        }
+    public List<Movie> getAll(Map<String, String> paramsMap, int pageNum, int pageSize) {
+        PageInfo<Movie> pageInfo
+                = PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(
+                        () -> movieDao.getAll(paramsMap)
+        );
+        return pageInfo.getList();
     }
 
     public Movie getById(int id) {
@@ -79,6 +82,17 @@ public class MovieServiceImpl implements IMovieService {
         for (int actorId : actorIds) {
             movieDao.addMovieActor(movieId, actorId);
         }
-        return 0;
+        return 1;
     }
+
+    @Override
+    public int updateMovieResource(int movieId, List<Integer> resourceIds) {
+        movieDao.deleteMovieResource(movieId);
+        for (int resourceId : resourceIds) {
+            movieDao.addMovieResource(movieId, resourceId);
+        }
+        return 1;
+    }
+
+
 }

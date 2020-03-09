@@ -9,6 +9,8 @@ import com.poldichen.movie.service.inter.IResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author poldi.chen
  * @className PictureServiceImpl
@@ -20,6 +22,11 @@ public class PictureServiceImpl implements IPictureService {
 
     @Autowired
     private IPictureDao pictureDao;
+
+    @Override
+    public List<Picture> getAll(String fileName) {
+        return pictureDao.getAll(fileName);
+    }
 
     @Override
     public int createOne(Picture picture) {

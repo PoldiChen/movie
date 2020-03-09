@@ -3,16 +3,19 @@ package com.poldichen.movie.service.inter;
 import com.poldichen.movie.entity.Movie;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IMovieService {
 
-    public List<Movie> getAll(String movieName);
+    List<Movie> getAll(Map<String, String> paramsMap, int pageNum, int pageSize);
 
-    public Movie getById(int id);
+    Movie getById(int id);
 
-    public int createOne(Movie movie);
+    int createOne(Movie movie);
 
-    public int update(int id, Movie movie);
+    int update(int id, Movie movie);
 
-    public int updateMovieActor(int movieId, List<Integer> actorIds);
+    int updateMovieActor(int movieId, List<Integer> actorIds);
+
+    int updateMovieResource(int movieId, List<Integer> resourceIds);
 }

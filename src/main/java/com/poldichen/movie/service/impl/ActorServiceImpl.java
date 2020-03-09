@@ -49,6 +49,12 @@ public class ActorServiceImpl implements IActorService {
 
     @Override
     public int update(int id, Actor actor) {
-        return actorDao.update(id, actor);
+        actorDao.update(id, actor);
+        actorDao.deleteActorCover(id);
+        List<Picture> covers = actor.getCovers();
+        for (Picture picture : covers) {
+            actorDao.addActorCover(id, picture.getId());
+        }
+        return 1;
     }
 }

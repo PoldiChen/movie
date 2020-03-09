@@ -22,8 +22,6 @@ public class ResourceController {
 
     @RequestMapping(value = "/resource", method = RequestMethod.POST)
     public Resp createOne(@RequestBody String resourceStr) {
-//        System.out.println("ActorController@createOne");
-//        System.out.println(actorStr);
         Resp resp = new Resp();
         Resource resource = JSON.parseObject(resourceStr, new TypeReference<Resource>(){});
         int resourceId = resourceService.createOne(resource);

@@ -9,11 +9,11 @@ import java.util.Date;
 
 /**
  * @author poldi.chen
- * @className Picture
+ * @className SystemLog
  * @description TODO
- * @date 2020/2/24 22:10
+ * @date 2020/3/8 10:18
  **/
-public class Picture {
+public class SystemLog {
 
     @Getter
     @Setter
@@ -21,23 +21,15 @@ public class Picture {
 
     @Getter
     @Setter
-    private String path;
+    private String logId;
 
     @Getter
     @Setter
-    private String fileName;
+    private String type;
 
     @Getter
     @Setter
-    private String url;
-
-    @Getter
-    @Setter
-    private String extension;
-
-    @Getter
-    @Setter
-    private int size;
+    private String detail;
 
     @Getter
     @Setter

@@ -43,6 +43,10 @@ public class Movie {
 
     @Getter
     @Setter
+    private String director;
+
+    @Getter
+    @Setter
     private String producer;
 
     @Getter

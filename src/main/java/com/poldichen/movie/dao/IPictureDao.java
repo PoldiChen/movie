@@ -1,12 +1,15 @@
 package com.poldichen.movie.dao;
 
 import com.poldichen.movie.entity.Picture;
-import com.poldichen.movie.entity.Resource;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface IPictureDao {
 
-    public int createOne(@Param("picture") Picture picture);
+    int createOne(@Param("picture") Picture picture);
 
-    public int update(@Param("id") int id, @Param("picture") Picture picture);
+    int update(@Param("id") int id, @Param("picture") Picture picture);
+
+    List<Picture> getAll(@Param("file_name") String fileName);
 }

@@ -3,19 +3,16 @@
 <mapper namespace="com.poldichen.movie.dao.IResourceDao">
 
 
-
     <insert id="createOne" parameterType="com.poldichen.movie.entity.Resource" useGeneratedKeys="true" keyProperty="resource.id" keyColumn="id">
-        insert into resource (url)
-        values (#{resource.url})
+        insert into resource (url, show_name, size, share_date, create_at, update_at)
+        values (#{resource.url}, #{resource.showName}, #{resource.size}, #{resource.shareDate}, NOW(), NOW())
     </insert>
 
     <update id="update">
         update resource
-        set url = #{resource.url}
+        set url = #{resource.url}, show_name = #{resource.showName}, size = #{resource.size}, share_date = #{resource.shareDate}, update_at = NOW()
         where id = #{id}
     </update>
-
-
 
 
 </mapper>

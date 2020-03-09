@@ -6,14 +6,7 @@ import com.poldichen.movie.entity.Actor;
 import com.poldichen.movie.entity.Resp;
 import com.poldichen.movie.service.inter.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -32,10 +25,6 @@ public class ActorController {
     public Resp getAll(@RequestParam(value = "name", required = false) String actorName) {
         Resp resp = new Resp();
         List<Actor> actors = actorService.getAll(actorName);
-        for (Actor actor : actors) {
-            System.out.println(actor.getBirthDate());
-            System.out.println(actor.getCreateAt());
-        }
         resp.setData(actors);
         return resp;
     }
@@ -50,8 +39,6 @@ public class ActorController {
 
     @RequestMapping(value = "/actor", method = RequestMethod.POST)
     public Resp createOne(@RequestBody String actorStr) {
-        System.out.println("ActorController@createOne");
-        System.out.println(actorStr);
         Resp resp = new Resp();
         Actor actor = JSON.parseObject(actorStr, new TypeReference<Actor>(){});
         int actorId = actorService.createOne(actor);
@@ -66,13 +53,5 @@ public class ActorController {
         int result = actorService.update(id, actor);
         resp.setData(result);
         return resp;
-    }
-
-    @RequestMapping(value = "/picture", produces = MediaType.IMAGE_JPEG_VALUE)
-    @ResponseBody
-    public BufferedImage getImage() throws IOException {
-        try (InputStream is = new FileInputStream("D:/test.jpg")){
-            return ImageIO.read(is);
-        }
     }
 }

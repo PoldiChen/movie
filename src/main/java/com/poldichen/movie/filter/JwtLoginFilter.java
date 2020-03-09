@@ -75,7 +75,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = Jwts.builder()
                 .setSubject(((UserDTO) auth.getPrincipal()).getUsername())
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1000 * 60)) // 过期时间，60秒
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1000 * 60 * 10)) // 过期时间，60秒
                 .signWith(SignatureAlgorithm.HS512, jwtSecret) // MyJwtSecret
                 .compact();
         res.addHeader("Authorization",  jwtPrefix + "-" + token); // Bearer空格

@@ -4,13 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Resp;
 import com.poldichen.movie.service.inter.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author poldi.chen
@@ -25,11 +30,15 @@ public class MovieController {
     private IMovieService movieService;
 
     @RequestMapping(value="/movie", method = RequestMethod.GET)
-    public Resp getAll(@RequestParam(value = "name", required = false) String movieName) {
-        System.out.println("MovieController@getAll");
-        System.out.println(movieName);
+    public Resp getAll(@RequestParam(value = "pageNum") int pageNum,
+                       @RequestParam(value = "pageSize") int pageSize,
+                       @RequestParam(value = "code", required = false) String movieCode,
+                       @RequestParam(value = "name", required = false) String movieName) {
         Resp resp = new Resp();
-        List<Movie> movies = movieService.getAll(movieName);
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put("code", movieCode);
+        paramsMap.put("name", movieName);
+        List<Movie> movies = movieService.getAll(paramsMap, pageNum, pageSize);
         resp.setData(movies);
         return resp;
     }
@@ -69,6 +78,16 @@ public class MovieController {
         JSONObject jsonObject = JSON.parseObject(paramStr);
         JSONArray actorIds = jsonObject.getJSONArray("actor_id");
         int result = movieService.updateMovieActor(movieId, JSONObject.parseArray(actorIds.toJSONString(), Integer.class));
+        resp.setData(result);
+        return resp;
+    }
+
+    @RequestMapping(value="/movie/{movieId}/resource", method = RequestMethod.PUT)
+    public Resp updateMovieResource(@PathVariable("movieId") int movieId, @RequestBody String paramStr) {
+        Resp resp = new Resp();
+        JSONObject jsonObject = JSON.parseObject(paramStr);
+        JSONArray resourceIds = jsonObject.getJSONArray("resource_id");
+        int result = movieService.updateMovieResource(movieId, JSONObject.parseArray(resourceIds.toJSONString(), Integer.class));
         resp.setData(result);
         return resp;
     }
