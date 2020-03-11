@@ -54,7 +54,7 @@ public class DoubanUtil {
         JSONObject movieObject = JSONObject.parseObject(movieJson);
         String imageUrl = movieObject.getString("image");
         System.out.println(imageUrl);
-        FetchUtil.downloadImage(imageUrl, "a");
+        PictureUtil.downloadImage(imageUrl, "a");
         JSONArray actors = movieObject.getJSONArray("actor");
         for (Object actor : actors) {
             JSONObject actorObject = JSONObject.parseObject(actor.toString());

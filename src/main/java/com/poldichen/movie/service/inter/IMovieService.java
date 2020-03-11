@@ -1,5 +1,6 @@
 package com.poldichen.movie.service.inter;
 
+import com.github.pagehelper.PageInfo;
 import com.poldichen.movie.entity.Movie;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.Map;
 
 public interface IMovieService {
 
-    List<Movie> getAll(Map<String, String> paramsMap, int pageNum, int pageSize);
+    PageInfo<Movie> getAll(Map<String, String> paramsMap, int pageNum, int pageSize);
 
     Movie getById(int id);
 

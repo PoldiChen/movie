@@ -41,7 +41,7 @@ public class MovieApiUtil {
     private static final String URL_ADD_RESOURCE = "http://localhost:8080/resource";
 
     private static final String AUTH
-            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgzNzA2MDkyfQ.TMPG-tnO9gRgLAFpuyO3bLoRLckWKlJq3lnAuq0b-Cz6iKVeJ76dDX3bcPOx_p3oYB9aVHTukVy4bz-L7Az_8g";
+            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgzODg5MjIwfQ.eXugUrMpwzUbGX0Wt2iinspH3yo6Z7OpfdqUONa_ZSAADCiEm2thBv5k1_uA7Z2K6Jhd-fQGNii76TISRYmAyw";
 
 
     public static int updateActor(int actorId, Map<String, Object> params) {

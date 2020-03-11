@@ -38,8 +38,8 @@ public class MovieController {
         Map<String, String> paramsMap = new HashMap<>();
         paramsMap.put("code", movieCode);
         paramsMap.put("name", movieName);
-        List<Movie> movies = movieService.getAll(paramsMap, pageNum, pageSize);
-        resp.setData(movies);
+        PageInfo<Movie> pageInfo = movieService.getAll(paramsMap, pageNum, pageSize);
+        resp.setData(pageInfo);
         return resp;
     }
 

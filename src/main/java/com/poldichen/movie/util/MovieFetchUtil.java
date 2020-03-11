@@ -30,14 +30,6 @@ public class MovieFetchUtil {
 
     private static final String HOST = "";
     private static final String URL_RESOURCE = "";
-
-    public static void downloadImageBatch() {
-        List<Picture> pictures = MovieApiUtil.getPicture("cover");
-        for (Picture picture : pictures) {
-            FetchUtil.downloadImage2(picture.getUrl(), picture.getFileName());
-        }
-    }
-
     public static void getResourceBatch() {
         List<Movie> movies = MovieApiUtil.getAllMovie();
         for (Movie movie : movies) {

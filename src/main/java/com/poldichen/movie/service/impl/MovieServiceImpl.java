@@ -26,12 +26,13 @@ public class MovieServiceImpl implements IMovieService {
     @Autowired
     private IMovieDao movieDao;
 
-    public List<Movie> getAll(Map<String, String> paramsMap, int pageNum, int pageSize) {
+    public PageInfo<Movie> getAll(Map<String, String> paramsMap, int pageNum, int pageSize) {
         PageInfo<Movie> pageInfo
                 = PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(
                         () -> movieDao.getAll(paramsMap)
         );
-        return pageInfo.getList();
+        System.out.println(pageInfo.getSize());
+        return pageInfo;
     }
 
     public Movie getById(int id) {
