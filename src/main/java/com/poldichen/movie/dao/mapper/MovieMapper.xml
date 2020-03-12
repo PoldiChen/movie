@@ -10,6 +10,14 @@
             <result column="id" property="id"/>
             <result column="name" property="name"/>
         </collection>
+
+        <collection property="covers" ofType="com.poldichen.movie.entity.Picture"
+                    javaType="java.util.List" select="getCoverByMovieId" column="{movieId=id}">
+            <result column="id" property="id"/>
+            <result column="path" property="path"/>
+            <result column="file_name" property="fileName"/>
+            <result column="url" property="url"/>
+        </collection>
     </resultMap>
 
     <select id="getActorByMovieId" parameterType="map" resultType="com.poldichen.movie.entity.Actor">
@@ -17,6 +25,13 @@
         from actor a
         left join movie_actor ma on a.id = ma.actor_id
         where ma.movie_id = #{movieId}
+    </select>
+
+    <select id="getCoverByMovieId" parameterType="map" resultType="com.poldichen.movie.entity.Picture">
+        select p.*
+        from picture p
+        left join movie_cover mc on p.id = mc.picture_id
+        where mc.movie_id = #{movieId}
     </select>
 
     <select id="getAll" resultMap="movieMap" parameterType="hashmap">

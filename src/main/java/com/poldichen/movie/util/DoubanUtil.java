@@ -2,12 +2,18 @@ package com.poldichen.movie.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.ParserConfig;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import sun.swing.BakedArrayList;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author poldi.chen
@@ -16,6 +22,24 @@ import java.io.IOException;
  * @date 2020/3/8 10:07
  **/
 public class DoubanUtil {
+
+    public static void main(String[] args) throws Exception {
+        ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+//        getAllMoviesDouban();
+//        getMovieList("https://movie.douban.com/j/new_search_subjects?sort=S&range=0,10&tags=&start=120");
+
+        getMovieDetailDouban("https://movie.douban.com/subject/1291546/");
+    }
+
+    public static void getMovieList(String movieListUrl) {
+        String result = HttpClientUtil.doGet(movieListUrl, new HashMap<>());
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        JSONArray data = jsonObject.getJSONArray("data");
+        for (Object movieObj : data) {
+            JSONObject movie = JSONObject.parseObject(movieObj.toString());
+            String movieUrl = movie.getString("url");
+        }
+    }
 
     public static void getAllMoviesDouban() throws IOException {
         String url = "http://movie.douban.com/chart";
@@ -44,21 +68,27 @@ public class DoubanUtil {
 
     public static void getMovieDetailDouban(String movieUrl) throws Exception {
         //获取html
+
+        String movieName = "";
+        String movieCoverUrl = "";
+        List<Map<String, String>> directors = new ArrayList<>();
+        List<Map<String, String>> writers = new ArrayList<>();
+        List<Map<String, String>> actors = new ArrayList<>();
+
         Document doc = FetchUtil.getUrlDoc(movieUrl);
-        System.out.println(doc);
-        Elements a = doc.select("script[type=\"application/ld+json\"]");
-        String movieJson = a.toString();
-        System.out.println(movieJson);
-        movieJson = movieJson.substring(movieJson.indexOf(">") + 1, movieJson.lastIndexOf("<"));
-        System.out.println(movieJson);
-        JSONObject movieObject = JSONObject.parseObject(movieJson);
-        String imageUrl = movieObject.getString("image");
-        System.out.println(imageUrl);
-        PictureUtil.downloadImage(imageUrl, "a");
-        JSONArray actors = movieObject.getJSONArray("actor");
-        for (Object actor : actors) {
-            JSONObject actorObject = JSONObject.parseObject(actor.toString());
-            System.out.println(actorObject.getString("name"));
+        Element script = doc.selectFirst("script[type=\"application/ld+json\"]");
+        String detailStr = script.data();
+        JSONObject movieObject = JSONObject.parseObject(detailStr);
+
+        movieName = movieObject.getString("name");
+        movieCoverUrl = movieObject.getString("image");
+
+        JSONArray directorArray = movieObject.getJSONArray("director");
+        for (Object directorObj : directorArray) {
+            JSONObject diretorObject = JSONObject.parseObject(directorObj.toString());
+            
         }
+
+
     }
 }

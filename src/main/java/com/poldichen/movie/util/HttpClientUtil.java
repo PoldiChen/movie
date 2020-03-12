@@ -44,7 +44,7 @@ public class HttpClientUtil {
         HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
         String responseStr = response.getBody();
-        System.out.println(responseStr);
+//        System.out.println(responseStr);
         return responseStr;
     }
 
