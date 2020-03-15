@@ -33,10 +33,12 @@ public class MovieController {
     public Resp getAll(@RequestParam(value = "pageNum") int pageNum,
                        @RequestParam(value = "pageSize") int pageSize,
                        @RequestParam(value = "code", required = false) String movieCode,
+                       @RequestParam(value = "title", required = false) String movieTitle,
                        @RequestParam(value = "name", required = false) String movieName) {
         Resp resp = new Resp();
         Map<String, String> paramsMap = new HashMap<>();
         paramsMap.put("code", movieCode);
+        paramsMap.put("title", movieTitle);
         paramsMap.put("name", movieName);
         PageInfo<Movie> pageInfo = movieService.getAll(paramsMap, pageNum, pageSize);
         resp.setData(pageInfo);

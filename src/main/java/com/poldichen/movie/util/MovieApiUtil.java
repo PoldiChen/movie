@@ -29,9 +29,9 @@ public class MovieApiUtil {
     private static final String URL_SEARCH_MOVIE = "http://localhost:8080/movie";
     private static final String URL_UPDATE_MOVIE_RESOURCE = "http://localhost:8080/movie";
 
-    private static final String URL_SEARCH_ACTOR = "http://localhost:8080/actor";
-    private static final String URL_ADD_ACTOR = "http://localhost:8080/actor";
-    private static final String URL_UPDATE_ACTOR = "http://localhost:8080/actor";
+    private static final String URL_SEARCH_ACTOR = "http://localhost:8080/celebrity";
+    private static final String URL_ADD_ACTOR = "http://localhost:8080/celebrity";
+    private static final String URL_UPDATE_ACTOR = "http://localhost:8080/celebrity";
 
     private static final String URL_ADD_PICTURE = "http://localhost:8080/picture";
     private static final String URL_SEARCH_PICTURE = "http://localhost:8080/picture";
@@ -41,7 +41,7 @@ public class MovieApiUtil {
     private static final String URL_ADD_RESOURCE = "http://localhost:8080/resource";
 
     private static final String AUTH
-            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTgzODg5MjIwfQ.eXugUrMpwzUbGX0Wt2iinspH3yo6Z7OpfdqUONa_ZSAADCiEm2thBv5k1_uA7Z2K6Jhd-fQGNii76TISRYmAyw";
+            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTg0MjY5ODkxfQ.Z_5sZqrnYJ3lFyHacAEt7gbWUKk4MZ00K3QcJLH0PMGGuAvZ030mjrWBBeCsvRfHJ_X4iarR4w-m3rvMepZQEg";
 
 
     public static int updateActor(int actorId, Map<String, Object> params) {
@@ -108,16 +108,17 @@ public class MovieApiUtil {
         return result;
     }
 
-    public static int isActorExist(String actorName) {
+    public static int isActorExist(String code) {
         Map<String, String> headerParams = new HashMap<>();
         headerParams.put("Authorization", AUTH);
-        String response = HttpClientUtil.doGet(URL_SEARCH_ACTOR + "?name=" + actorName, headerParams);
+        String response = HttpClientUtil.doGet(URL_SEARCH_ACTOR + "?pageSize=1&pageNum=1&code=" + code, headerParams);
         JSONObject responseObject = JSONObject.parseObject(response);
-        JSONArray data = responseObject.getJSONArray("data");
-        if (data.size() == 0) {
+        JSONObject data = responseObject.getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        if (list.size() == 0) {
             return 0;
         } else {
-            JSONObject actorObject = JSONObject.parseObject(data.get(0).toString());
+            JSONObject actorObject = JSONObject.parseObject(list.get(0).toString());
             return actorObject.getInteger("id");
         }
     }
@@ -125,13 +126,14 @@ public class MovieApiUtil {
     public static int isMovieExist(String movieCode) {
         Map<String, String> headerParams = new HashMap<>();
         headerParams.put("Authorization", AUTH);
-        String response = HttpClientUtil.doGet(URL_SEARCH_MOVIE + "?code=" + movieCode, headerParams);
+        String response = HttpClientUtil.doGet(URL_SEARCH_MOVIE + "?pageSize=1&pageNum=1&code=" + movieCode, headerParams);
         JSONObject responseObject = JSONObject.parseObject(response);
-        JSONArray data = responseObject.getJSONArray("data");
-        if (data.size() == 0) {
+        JSONObject data1 = responseObject.getJSONObject("data");
+        JSONArray list = data1.getJSONArray("list");
+        if (list.size() == 0) {
             return 0;
         } else {
-            JSONObject movieObject = JSONObject.parseObject(data.get(0).toString());
+            JSONObject movieObject = JSONObject.parseObject(list.get(0).toString());
             return movieObject.getInteger("id");
         }
     }

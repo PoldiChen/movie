@@ -3,7 +3,7 @@ package com.poldichen.movie.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.poldichen.movie.dao.IMovieDao;
-import com.poldichen.movie.entity.Actor;
+import com.poldichen.movie.entity.Celebrity;
 import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Picture;
 import com.poldichen.movie.entity.Resource;
@@ -31,7 +31,6 @@ public class MovieServiceImpl implements IMovieService {
                 = PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(
                         () -> movieDao.getAll(paramsMap)
         );
-        System.out.println(pageInfo.getSize());
         return pageInfo;
     }
 
@@ -44,9 +43,19 @@ public class MovieServiceImpl implements IMovieService {
         movieDao.createOne(movie);
         int movieId = movie.getId();
 
-        List<Actor> actors = movie.getActors();
-        for (Actor actor : actors) {
-            movieDao.addMovieActor(movieId, actor.getId());
+        List<Celebrity> actors = movie.getActors();
+        for (Celebrity celebrity : actors) {
+            movieDao.addMovieActor(movieId, celebrity.getId());
+        }
+
+        List<Celebrity> directors = movie.getDirectors();
+        for (Celebrity celebrity : directors) {
+            movieDao.addMovieDirector(movieId, celebrity.getId());
+        }
+
+        List<Celebrity> writers = movie.getWriters();
+        for (Celebrity celebrity : writers) {
+            movieDao.addMovieWriter(movieId, celebrity.getId());
         }
 
         List<Picture> covers = movie.getCovers();
@@ -55,19 +64,29 @@ public class MovieServiceImpl implements IMovieService {
         }
 
         List<Picture> coverDetails = movie.getCoverDetails();
-        for (Picture picture : coverDetails) {
-            movieDao.addMovieCoverDetail(movieId, picture.getId());
+        if (coverDetails != null) {
+            for (Picture picture : coverDetails) {
+                movieDao.addMovieCoverDetail(movieId, picture.getId());
+            }
         }
+
 
         List<Picture> screenshots = movie.getScreenshots();
-        for (Picture picture : screenshots) {
-            movieDao.addMovieScreenshot(movieId, picture.getId());
+        if (screenshots != null) {
+            for (Picture picture : screenshots) {
+                movieDao.addMovieScreenshot(movieId, picture.getId());
+            }
         }
 
+
+
         List<Resource> resources = movie.getResources();
-        for (Resource resource : resources) {
-            movieDao.addMovieResource(movieId, resource.getId());
+        if (resources != null) {
+            for (Resource resource : resources) {
+                movieDao.addMovieResource(movieId, resource.getId());
+            }
         }
+
 
         return movieId;
     }

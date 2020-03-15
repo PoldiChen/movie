@@ -21,21 +21,24 @@ import java.util.*;
  **/
 public class MovieFetchUtil {
 
-    private static final String LENGTH_KEY = "";
-    private static final String CODE_KEY = "";
-    private static final String PUBLISH_DATE_KEY = "";
-    private static final String PRODUCER_KEY = "";
-    private static final String PUBLISHER_KEY = "";
-    private static final String DIRECTOR_KEY = "";
+    private static final String LENGTH_KEY = "長度: ";
+    private static final String CODE_KEY = "識別碼: ";
+    private static final String PUBLISH_DATE_KEY = "發行日期: ";
+    private static final String PRODUCER_KEY = "製作商: ";
+    private static final String PUBLISHER_KEY = "發行商: ";
+    private static final String DIRECTOR_KEY = "導演: ";
 
-    private static final String HOST = "";
-    private static final String URL_RESOURCE = "";
+    private static final String HOST = "https://www.busdmm.cloud"; // https://www.busdmm.cloud/MIAA-184
+    private static final String URL_RESOURCE = "https://www.busdmm.cloud/ajax/uncledatoolsbyajax.php";
+
+
+
     public static void getResourceBatch() {
         List<Movie> movies = MovieApiUtil.getAllMovie();
         for (Movie movie : movies) {
             List<Resource> resources = movie.getResources();
             if (resources.size() == 0) {
-                getResource(movie.getCode());
+                getResource(movie.getTitle());
             }
         }
     }

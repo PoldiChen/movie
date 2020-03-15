@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poldichen.movie.dao.ICelebrityDao">
+
+    <resultMap type="com.poldichen.movie.entity.Celebrity" id="celebrityMap">
+        <id property="id" column="id"/>
+        <result property="code" column="code" />
+        <result property="name" column="name"/>
+        <result property="englishName" column="english_name" />
+        <result property="gender" column="gender" />
+        <result property="height" column="height" />
+        <result property="profession" column="profession" />
+        <result property="birthDate" column="birth_date"/>
+        <result property="passAwayDate" column="pass_away_date" />
+        <result property="age" column="age" />
+        <result property="constellation" column="constellation" />
+        <result property="nationality" column="nationality" />
+        <result property="birthPlace" column="birth_place" />
+        <result property="hobby" column="hobby" />
+        <result property="search" column="search" />
+        <result property="createAt" column="create_at" />
+        <result property="updateAt" column="update_at" />
+
+        <collection property="covers" ofType="com.poldichen.movie.entity.Picture"
+                    javaType="java.util.List" select="getCoverByCelebrityId" column="{celebrityId=id}">
+            <result column="id" property="id" />
+            <result column="file_name" property="fileName" />
+        </collection>
+
+    </resultMap>
+
+    <select id="getAll" resultMap="celebrityMap" parameterType="hashmap">
+        select c.*
+        from celebrity c
+        where 1 = 1
+        <if test="code != null and code != '' "> and c.code like concat('%', #{code}, '%')</if>
+        <if test="name != null and name != '' "> and c.name like concat('%', #{name}, '%')</if>
+    </select>
+
+    <select id="getCoverByCelebrityId" parameterType="map" resultType="com.poldichen.movie.entity.Picture">
+        select p.*
+        from picture p
+        left join celebrity_cover cc on p.id = cc.picture_id
+        where cc.celebrity_id = #{celebrityId}
+    </select>
+
+    <insert id="createOne" parameterType="com.poldichen.movie.entity.Celebrity" useGeneratedKeys="true" keyProperty="celebrity.id" keyColumn="id">
+        insert into celebrity (code, name, english_name, gender, height, profession, birth_date, pass_away_date, age, constellation, nationality, birth_place,
+                               hobby, description, search, create_at, update_at)
+        values (#{celebrity.code}, #{celebrity.name}, #{celebrity.englishName}, #{celebrity.gender},  #{celebrity.height}, #{celebrity.profession},
+                #{celebrity.birthDate}, #{celebrity.passAwayDate}, #{celebrity.age}, #{celebrity.constellation},
+                #{celebrity.nationality}, #{celebrity.birthPlace}, #{celebrity.hobby}, #{celebrity.description}, #{celebrity.search}, NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        update celebrity
+        set code = #{celebrity.code}, name = #{celebrity.name}, english_name = #{celebrity.englishName}, gender = #{celebrity.gender}, height = #{celebrity.height},
+            profession = #{celebrity.profession}, birth_date = #{celebrity.birthDate}, pass_away_date = #{celebrity.passAwayDate},
+            age = #{celebrity.age}, constellation = #{celebrity.constellation}, nationality = #{celebrity.nationality},
+            birth_place = #{celebrity.birthPlace}, hobby = #{celebrity.hobby}, description = #{celebrity.description},
+            search = #{celebrity.search}, update_at = NOW()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCelebrityCover">
+        delete from celebrity_cover where celebrity_id = #{celebrity_id}
+    </delete>
+
+    <insert id="addCelebrityCover" parameterType="int" useGeneratedKeys="true" keyProperty="celebrity.id">
+        insert into celebrity_cover (celebrity_id, picture_id)
+        values (#{celebrity_id}, #{picture_id})
+    </insert>
+
+
+
+
+</mapper>

@@ -3,12 +3,15 @@
 <mapper namespace="com.poldichen.movie.dao.IMovieDao">
 
     <resultMap id="movieMap" type="com.poldichen.movie.entity.Movie">
-        <result column="id" property="id"/>
-        <result column="name" property="name"/>
-        <collection property="actors" ofType="com.poldichen.movie.entity.Actor"
+        <result column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="title" property="title" />
+        <result column="name" property="name" />
+
+        <collection property="actors" ofType="com.poldichen.movie.entity.Celebrity"
                     javaType="java.util.List" select="getActorByMovieId" column="{movieId=id}">
-            <result column="id" property="id"/>
-            <result column="name" property="name"/>
+            <result column="id" property="id" />
+            <result column="name" property="name" />
         </collection>
 
         <collection property="covers" ofType="com.poldichen.movie.entity.Picture"
@@ -20,10 +23,10 @@
         </collection>
     </resultMap>
 
-    <select id="getActorByMovieId" parameterType="map" resultType="com.poldichen.movie.entity.Actor">
-        select a.*
-        from actor a
-        left join movie_actor ma on a.id = ma.actor_id
+    <select id="getActorByMovieId" parameterType="map" resultType="com.poldichen.movie.entity.Celebrity">
+        select c.*
+        from celebrity c
+        left join movie_actor ma on c.id = ma.celebrity_id
         where ma.movie_id = #{movieId}
     </select>
 
@@ -39,6 +42,7 @@
         from movie m
         where 1 = 1
         <if test="code != null and code != '' "> and m.code like concat('%', #{code}, '%')</if>
+        <if test="title != null and title != '' "> and m.title like concat('%', #{title}, '%')</if>
         <if test="name != null and name != '' "> and m.name like concat('%', #{name}, '%')</if>
     </select>
 
@@ -50,15 +54,17 @@
     </select>
 
     <insert id="createOne" parameterType="com.poldichen.movie.entity.Movie" useGeneratedKeys="true" keyProperty="movie.id" keyColumn="id">
-        insert into movie (code, name, publish_date, length, type, director, producer, publisher, create_at, update_at)
-        values (#{movie.code}, #{movie.name}, #{movie.publishDate}, #{movie.length}, #{movie.type},
-        #{movie.director}, #{movie.producer}, #{movie.publisher}, NOW(), NOW())
+        insert into movie (code, title, name, alias_name, length, publish_date, type, language, produce_country, producer, publisher, description,
+                           create_at, update_at)
+        values (#{movie.code}, #{movie.title}, #{movie.name}, #{movie.aliasName}, #{movie.length}, #{movie.publishDate}, #{movie.type},
+                #{movie.language}, #{movie.produceCountry}, #{movie.producer}, #{movie.publisher}, #{movie.description}, NOW(), NOW())
     </insert>
 
     <update id="update">
         update movie
-        set code = #{movie.code}, name = #{movie.name}, publish_date = #{movie.publishDate},
-        length = #{movie.length}, type = #{movie.type}, director = #{movie.director}, producer = #{movie.producer}, publisher = #{movie.publisher}, update_at = NOW()
+        set code = #{movie.code}, title = #{movie.title}, name = #{movie.name}, alias_name = #{movie.aliasName}, length = #{movie.length},
+            publish_date = #{movie.publishDate}, type = #{movie.type}, language = #{movie.language}, produce_country = #{movie.productCountry},
+            producer = #{movie.producer}, publisher = #{movie.publisher}, description = #{movie.description}, update_at = NOW()
         where id = #{id}
     </update>
 
@@ -67,8 +73,26 @@
     </delete>
 
     <insert id="addMovieActor" parameterType="int" useGeneratedKeys="true" keyProperty="movie.id">
-        insert into movie_actor (movie_id, actor_id)
-        values (#{movie_id}, #{actor_id})
+        insert into movie_actor (movie_id, celebrity_id)
+        values (#{movie_id}, #{celebrity_id})
+    </insert>
+
+    <delete id="deleteMovieDirector">
+        delete from movie_director where movie_id = #{movie_id}
+    </delete>
+
+    <insert id="addMovieDirector" parameterType="int" useGeneratedKeys="true" keyProperty="movie.id">
+        insert into movie_director (movie_id, celebrity_id)
+        values (#{movie_id}, #{celebrity_id})
+    </insert>
+
+    <delete id="deleteMovieWriter">
+        delete from movie_writer where movie_id = #{movie_id}
+    </delete>
+
+    <insert id="addMovieWriter" parameterType="int" useGeneratedKeys="true" keyProperty="movie.id">
+        insert into movie_writer (movie_id, celebrity_id)
+        values (#{movie_id}, #{celebrity_id})
     </insert>
 
     <delete id="deleteMovieCover">

@@ -26,12 +26,19 @@ public class Movie {
 
     @Getter
     @Setter
+    private String title;
+
+    @Getter
+    @Setter
     private String name;
 
     @Getter
     @Setter
-    @JsonFormat(pattern = Constants.DATE_FORMAT)
-    private Date publishDate;
+    private String aliasName;
+
+    @Getter
+    @Setter
+    private String publishDate;
 
     @Getter
     @Setter
@@ -43,7 +50,11 @@ public class Movie {
 
     @Getter
     @Setter
-    private String director;
+    private String language;
+
+    @Getter
+    @Setter
+    private String produceCountry;
 
     @Getter
     @Setter
@@ -55,6 +66,10 @@ public class Movie {
 
     @Getter
     @Setter
+    private String description;
+
+    @Getter
+    @Setter
     @JsonFormat(pattern = Constants.TIME_FORMAT, timezone = Constants.TIME_ZONE)
     private Date createAt;
 
@@ -63,13 +78,24 @@ public class Movie {
     @JsonFormat(pattern = Constants.TIME_FORMAT, timezone = Constants.TIME_ZONE)
     private Date updateAt;
 
+    /**
+     * 关联属性
+     */
     @Getter
     @Setter
     private List<Video> videos;
 
     @Getter
     @Setter
-    private List<Actor> actors;
+    private List<Celebrity> actors;
+
+    @Getter
+    @Setter
+    private List<Celebrity> directors;
+
+    @Getter
+    @Setter
+    private List<Celebrity> writers;
 
     @Getter
     @Setter
