@@ -17,7 +17,6 @@
         <result property="nationality" column="nationality" />
         <result property="birthPlace" column="birth_place" />
         <result property="hobby" column="hobby" />
-        <result property="search" column="search" />
         <result property="createAt" column="create_at" />
         <result property="updateAt" column="update_at" />
 
@@ -46,10 +45,10 @@
 
     <insert id="createOne" parameterType="com.poldichen.movie.entity.Celebrity" useGeneratedKeys="true" keyProperty="celebrity.id" keyColumn="id">
         insert into celebrity (code, name, english_name, gender, height, profession, birth_date, pass_away_date, age, constellation, nationality, birth_place,
-                               hobby, description, search, create_at, update_at)
+                               hobby, description, create_at, update_at)
         values (#{celebrity.code}, #{celebrity.name}, #{celebrity.englishName}, #{celebrity.gender},  #{celebrity.height}, #{celebrity.profession},
                 #{celebrity.birthDate}, #{celebrity.passAwayDate}, #{celebrity.age}, #{celebrity.constellation},
-                #{celebrity.nationality}, #{celebrity.birthPlace}, #{celebrity.hobby}, #{celebrity.description}, #{celebrity.search}, NOW(), NOW())
+                #{celebrity.nationality}, #{celebrity.birthPlace}, #{celebrity.hobby}, #{celebrity.description}, NOW(), NOW())
     </insert>
 
     <update id="update">
@@ -58,7 +57,7 @@
             profession = #{celebrity.profession}, birth_date = #{celebrity.birthDate}, pass_away_date = #{celebrity.passAwayDate},
             age = #{celebrity.age}, constellation = #{celebrity.constellation}, nationality = #{celebrity.nationality},
             birth_place = #{celebrity.birthPlace}, hobby = #{celebrity.hobby}, description = #{celebrity.description},
-            search = #{celebrity.search}, update_at = NOW()
+            update_at = NOW()
         where id = #{id}
     </update>
 

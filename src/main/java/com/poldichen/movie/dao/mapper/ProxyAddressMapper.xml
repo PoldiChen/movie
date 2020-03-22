@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poldichen.movie.dao.IProxyAddressDao">
+
+
+    <insert id="createOne" parameterType="com.poldichen.movie.entity.ProxyAddress" useGeneratedKeys="true" keyProperty="proxyAddress.id" keyColumn="id">
+        insert into proxy_address (country, locate, protocol, address, port, speed, connect_time, available_time, verify_time, available, create_at, update_at)
+        values (#{proxyAddress.country}, #{proxyAddress.locate}, #{proxyAddress.protocol}, #{proxyAddress.address}, #{proxyAddress.port},
+                #{proxyAddress.speed}, #{proxyAddress.connectTime}, #{proxyAddress.availableTime}, #{proxyAddress.verifyTime},
+                #{proxyAddress.available}, NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        update resource
+        set country = #{proxyAddress.country}, locate = #{proxyAddress.locate}, protocol = #{proxyAddress.protocol}, address = #{proxyAddress.address},
+            port = #{proxyAddress.port}, speed = #{proxyAddress.speed}, connect_time = #{proxyAdderss.connectTime}, available_time = #{proxyAddress.availableTime},
+            verify_time = #{proxyAddress.verifyTime}, available = #{proxyAddress.available}, update_at = NOW()
+        where id = #{id}
+    </update>
+
+    <select id="getAll" resultType="com.poldichen.movie.entity.ProxyAddress" parameterType="java.lang.String">
+        select * from proxy_address
+    </select>
+
+
+</mapper>

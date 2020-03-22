@@ -21,16 +21,15 @@ import java.util.Map;
  **/
 public class PictureUtil {
 
-    private static final String PICTURE_DIR = "E:\\movie\\picture_actor";
+    private static final String PICTURE_DIR = "E:\\movie\\picture_douban";
 
     public static void main(String[] args) {
         downloadImageBatch();
     }
 
     public static void downloadImageBatch() {
-        List<Picture> pictures = MovieApiUtil.getPicture("actor_cover");
+        List<Picture> pictures = MovieApiUtil.getPicture("cover");
         for (Picture picture : pictures) {
-//            System.out.println(picture.getUrl());
             downloadImage2(picture.getUrl(), picture.getFileName());
         }
     }
@@ -95,7 +94,7 @@ public class PictureUtil {
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, Object> systemLogParams = new HashMap<>();
-            systemLogParams.put("log_id", imageUrl);
+            systemLogParams.put("log_id", fileName);
             systemLogParams.put("type", "download_picture_fail");
             systemLogParams.put("detail", e.getMessage());
             MovieApiUtil.addSystemLog(systemLogParams);

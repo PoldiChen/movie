@@ -11,6 +11,10 @@ import org.jsoup.select.Elements;
 import sun.swing.BakedArrayList;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,10 +29,14 @@ import java.util.Map;
 public class DoubanUtil {
 
     public static void main(String[] args) throws Exception {
+
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
 
+        System.getProperties().setProperty("proxySet", "true");
+        System.getProperties().setProperty("http.proxyHost", "218.21.230.156");
+        System.getProperties().setProperty("http.proxyPort", "808");
 
-        for (int i = 7; i < 100; i++) {
+        for (int i = 2; i < 100; i++) {
             int start = i * 20;
             String listUrl = "https://movie.douban.com/j/new_search_subjects?sort=S&range=0,10&tags=&start=" + start;
             List<String> movieUrls = getMovieList(listUrl);
@@ -133,8 +141,12 @@ public class DoubanUtil {
         Element introSpan = introElement.selectFirst("span[class=\"all hidden\"]");
         if (introSpan == null) {
             celebrityDescription = bd.text();
+            celebrityDescription = celebrityDescription.replace((char) 12288, ' ');
+            celebrityDescription = celebrityDescription.trim();
         } else {
-            celebrityDescription = introSpan.text().trim();
+            celebrityDescription = introSpan.text();
+            celebrityDescription = celebrityDescription.replace((char) 12288, ' ');
+            celebrityDescription = celebrityDescription.trim();
         }
 
         System.out.println(celebrityName);
@@ -151,7 +163,7 @@ public class DoubanUtil {
 
         int celebrityId = MovieApiUtil.isActorExist(celebrityCode);
         if (celebrityId == 0) {
-            int pictureId = uploadPicture("celebrity_cover", celebrityName + " " + celebrityEnglishName, celebrityCoverUrl);
+            int pictureId = uploadPicture("celebrity_cover", celebrityCode, celebrityCoverUrl);
             Map<String, Object> actorParams = new HashMap<>();
             actorParams.put("name", celebrityName);
             actorParams.put("code", celebrityCode);
@@ -193,19 +205,23 @@ public class DoubanUtil {
     public static void parseMovie(String movieUrl) {
         System.out.println("[parseMovie]" + movieUrl);
 
+        // get movie_code from url
         String movieCode;
         String[] vals = movieUrl.split("/");
         movieCode = vals[vals.length-1];
 
+        // if movie exist
         int movieId = MovieApiUtil.isMovieExist(movieCode);
         if (movieId != 0) {
             return;
         }
 
+        // declare params
         String movieTitle = "";
         String movieCoverUrl = "";
         String movieAliasName = "";
-        String movieType = "";
+        String movieCategory = "";
+        String movieLabel = "";
         String moviePublishDate = "";
         String movieLength = "";
         String moviePublishCountry = "";
@@ -215,14 +231,16 @@ public class DoubanUtil {
         List<Integer> writerIds = new ArrayList<>();
         List<Integer> actorIds = new ArrayList<>();
 
+        // get movie doc
         Document doc = null;
         try {
             doc = FetchUtil.getUrlDocHttp(movieUrl);
         } catch (Exception e) {
+            e.printStackTrace();
             Map<String, Object> systemLogParams = new HashMap<>();
             systemLogParams.put("log_id", movieCode);
             systemLogParams.put("type", "parse_movie_detail_fail");
-            systemLogParams.put("detail", movieUrl);
+            systemLogParams.put("detail", e.getMessage());
             MovieApiUtil.addSystemLog(systemLogParams);
             return;
         }
@@ -242,10 +260,11 @@ public class DoubanUtil {
         movieTitle = movieObject.getString("name");
         movieCoverUrl = movieObject.getString("image");
         moviePublishDate = movieObject.getString("datePublished");
+        movieCategory = movieObject.getString("@type");
 
         JSONArray genreArray = movieObject.getJSONArray("genre");
         for (Object genre : genreArray) {
-            movieType += genre.toString() + "/";
+            movieLabel += genre.toString() + "/";
         }
 
         JSONArray directorArray = movieObject.getJSONArray("director");
@@ -325,28 +344,32 @@ public class DoubanUtil {
         Element descriptionElement = doc.selectFirst("span[property=\"v:summary\"]");
         if (descriptionElement != null) {
             movieDescription = descriptionElement.text();
+            movieDescription = movieDescription.replace((char) 12288, ' ');
+            movieDescription = movieDescription.trim();
         }
 
         System.out.println(movieTitle);
         System.out.println(movieCoverUrl);
-        System.out.println(movieType);
+        System.out.println(movieCategory);
+        System.out.println(movieLabel);
         System.out.println(moviePublishDate);
         System.out.println(movieLength);
         System.out.println(moviePublishCountry);
         System.out.println(movieLanguage);
         System.out.println(movieDescription);
 
-        int pictureId = uploadPicture("movie_cover", movieTitle, movieCoverUrl);
+        int pictureId = uploadPicture("movie_cover", movieCode, movieCoverUrl);
 
         Map<String, Object> movieParams = new HashMap<>();
         movieParams.put("code", movieCode);
         movieParams.put("title", movieTitle);
         movieParams.put("name", movieTitle);
         movieParams.put("alias_name", movieAliasName);
-        movieParams.put("type", movieType);
+        movieParams.put("category", movieCategory);
+        movieParams.put("label", movieLabel);
         movieParams.put("publish_date", moviePublishDate);
         movieParams.put("length", movieLength);
-        movieParams.put("publish_country", moviePublishCountry);
+        movieParams.put("produce_country", moviePublishCountry);
         movieParams.put("language", movieLanguage);
         movieParams.put("description", movieDescription);
 

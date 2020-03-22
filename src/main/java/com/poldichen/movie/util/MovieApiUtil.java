@@ -6,11 +6,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Picture;
+import com.poldichen.movie.entity.ProxyAddress;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -40,8 +40,11 @@ public class MovieApiUtil {
 
     private static final String URL_ADD_RESOURCE = "http://localhost:8080/resource";
 
+    private static final String URL_ADD_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
+    private static final String URL_GET_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
+
     private static final String AUTH
-            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTg0MjY5ODkxfQ.Z_5sZqrnYJ3lFyHacAEt7gbWUKk4MZ00K3QcJLH0PMGGuAvZ030mjrWBBeCsvRfHJ_X4iarR4w-m3rvMepZQEg";
+            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTg0OTE4MDk2fQ.oNgjAjW0KU7Id4YcOUTvdtz_dm-_JPWgUuYX_lc1fpzCT4JcEAf9elW95tJgD6953JvwH1XRg5qu4rE6fQsgLQ";
 
 
     public static int updateActor(int actorId, Map<String, Object> params) {
@@ -65,6 +68,13 @@ public class MovieApiUtil {
         return result;
     }
 
+    public static int addProxyAddress(Map<String, Object> params) {
+        String response = HttpClientUtil.doPost(URL_ADD_PROXY_ADDRESS, AUTH, params);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        int result = jsonObject.getInteger("data");
+        return result;
+    }
+
     public static int addResource(Map<String, Object> params) {
         String response = HttpClientUtil.doPost(URL_ADD_RESOURCE, AUTH, params);
         JSONObject jsonObject = JSONObject.parseObject(response);
@@ -79,6 +89,15 @@ public class MovieApiUtil {
         JSONObject jsonObject = JSONObject.parseObject(response);
         List<Picture> pictures = JSON.parseObject(jsonObject.getString("data"), new TypeReference<List<Picture>>(){});
         return pictures;
+    }
+
+    public static List<ProxyAddress> getProxyAddress() {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put("Authorization", AUTH);
+        String response = HttpClientUtil.doGet(URL_GET_PROXY_ADDRESS, headerParams);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        List<ProxyAddress> proxyAddresses = JSON.parseObject(jsonObject.getString("data"), new TypeReference<List<ProxyAddress>>(){});
+        return proxyAddresses;
     }
 
     public static List<Movie> getAllMovie() {

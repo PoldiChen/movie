@@ -2,6 +2,7 @@ package com.poldichen.movie.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.github.pagehelper.PageInfo;
 import com.poldichen.movie.entity.Resp;
 import com.poldichen.movie.entity.SystemLog;
 import com.poldichen.movie.service.inter.ISystemLogService;
@@ -32,10 +33,13 @@ public class SystemLogController {
     }
 
     @RequestMapping(value = "/system_log", method = RequestMethod.GET)
-    public Resp getByType(@RequestParam(value = "type") String type) {
+    public Resp getByType(
+            @RequestParam(value = "pageSize") int pageSize,
+            @RequestParam(value = "pageNum") int pageNum,
+            @RequestParam(value = "type") String type) {
         Resp resp = new Resp();
-        List<SystemLog> systemLogs = systemLogService.getByType(type);
-        resp.setData(systemLogs);
+        PageInfo<SystemLog> pageInfo = systemLogService.getByType(type, pageSize, pageNum);
+        resp.setData(pageInfo);
         return resp;
     }
 }

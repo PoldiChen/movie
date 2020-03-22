@@ -8,7 +8,11 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
+import com.poldichen.movie.entity.ProxyAddress;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import javax.imageio.ImageIO;
@@ -22,10 +26,11 @@ import javax.imageio.ImageIO;
 public class FetchUtil {
 
     public static Document getUrlDoc(String url) throws Exception {
+        Thread.sleep(getRandom());
         Document doc = Jsoup.connect(url)
                 .maxBodySize(Integer.MAX_VALUE)
                 .data("query", "Java")
-                .cookie("auth", "douban-fav-remind=1; bid=Wl_fK9wCXuo; ll=\"118282\"; _vwo_uuid_v2=D77F3D0D111DEED08EEDBD3EB46B0DB7B|05d12f5c3309186995b611c476f4566c; __yadk_uid=Dg4ep2cNWG0hrgZw24cwgZcQ1TvDAecw; trc_cookie_storage=taboola%2520global%253Auser-id%3D82a14e1d-d7d3-4112-b618-dac3bca1ab77-tuct1afd52c; __utmv=30149280.6253; __gads=ID=b43ec049b9384d4b:T=1566317147:S=ALNI_MZGFSV3f3_LPI0lyudZx4yQy2sCyw; douban-profile-remind=1; push_noty_num=0; push_doumail_num=0; viewed=\"5453891\"; gr_user_id=c728252b-5062-4b91-bac1-d9745ca3e996; dbcl2=\"62533792:7RiaOxk+CPI\"; __utmz=30149280.1584156452.54.9.utmcsr=movie.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/celebrity/1003494/; __utmz=223695111.1584156470.49.8.utmcsr=search.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/movie/subject_search; ct=y; _pk_ref.100001.4cf6=%5B%22%22%2C%22%22%2C1584233968%2C%22https%3A%2F%2Fsearch.douban.com%2Fmovie%2Fsubject_search%3Fsearch_text%3D%25E4%25B8%2580%26cat%3D1002%22%5D; _pk_ses.100001.4cf6=*; __utma=30149280.1396546215.1519473633.1584201921.1584233969.58; __utmb=30149280.0.10.1584233969; __utma=223695111.834493428.1565358274.1584201921.1584233969.53; __utmb=223695111.0.10.1584233969; ap_v=0,6.0; ck=fnep; __utmc=30149280; __utmc=223695111; _pk_id.100001.4cf6=97291528141a9588.1565358273.53.1584234467.1584202025.")
+                .cookie("auth", "token")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134")
                 .timeout(60000)
                 .post();
@@ -33,9 +38,35 @@ public class FetchUtil {
     }
 
     public static Document getUrlDocHttp(String url) throws Exception {
-        String response = HttpClientUtil.doGet(url, new HashMap<>());
+
+
+
+        Thread.sleep(getRandom());
+
+        Map<String, String> headers = new HashMap<>();
+//        headers.put("cookie", "_free_proxy_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiJTNiYWRmOWQ2NGYwYTQ2MzQ1ZGVkZjVlMzNhM2E1NzUyBjsAVEkiEF9jc3JmX3Rva2VuBjsARkkiMStLdlNXVGdKcmEyR0ZqenBBRjVaUGJDOW5SOGU1cmx5dnpXMnNBcWVmMmc9BjsARg%3D%3D--02e56448455ed12c3c6fc4158c086a8137372da4; Hm_lvt_0cf76c77469e965d2957f0553e6ecf59=1584275419,1584847564; Hm_lpvt_0cf76c77469e965d2957f0553e6ecf59=1584860994");
+//        headers.put("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
+
+        String response = HttpClientUtil.doGet(url, headers);
         Document doc = Jsoup.parse(response);
         return doc;
+    }
+
+//    private static void setProxy() {
+//        List<ProxyAddress> proxyAddresses = MovieApiUtil.getProxyAddress();
+//        for ()
+//    }
+
+    private static int getRandom() {
+        Random random = new Random();
+        return 1000 + random.nextInt(1000);
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i < 100; i++) {
+            System.out.println(getRandom());
+        }
+
     }
 
 

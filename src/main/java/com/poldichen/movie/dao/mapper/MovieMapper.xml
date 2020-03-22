@@ -54,16 +54,17 @@
     </select>
 
     <insert id="createOne" parameterType="com.poldichen.movie.entity.Movie" useGeneratedKeys="true" keyProperty="movie.id" keyColumn="id">
-        insert into movie (code, title, name, alias_name, length, publish_date, type, language, produce_country, producer, publisher, description,
+        insert into movie (code, title, name, alias_name, category, label, length, publish_date, language, produce_country, producer, publisher, description,
                            create_at, update_at)
-        values (#{movie.code}, #{movie.title}, #{movie.name}, #{movie.aliasName}, #{movie.length}, #{movie.publishDate}, #{movie.type},
+        values (#{movie.code}, #{movie.title}, #{movie.name}, #{movie.aliasName}, #{movie.category}, #{movie.label}, #{movie.length}, #{movie.publishDate},
                 #{movie.language}, #{movie.produceCountry}, #{movie.producer}, #{movie.publisher}, #{movie.description}, NOW(), NOW())
     </insert>
 
     <update id="update">
         update movie
-        set code = #{movie.code}, title = #{movie.title}, name = #{movie.name}, alias_name = #{movie.aliasName}, length = #{movie.length},
-            publish_date = #{movie.publishDate}, type = #{movie.type}, language = #{movie.language}, produce_country = #{movie.productCountry},
+        set code = #{movie.code}, title = #{movie.title}, name = #{movie.name}, alias_name = #{movie.aliasName}, category = #{movie.category},
+            label = #{movie.label}, length = #{movie.length},
+            publish_date = #{movie.publishDate}, language = #{movie.language}, produce_country = #{movie.productCountry},
             producer = #{movie.producer}, publisher = #{movie.publisher}, description = #{movie.description}, update_at = NOW()
         where id = #{id}
     </update>

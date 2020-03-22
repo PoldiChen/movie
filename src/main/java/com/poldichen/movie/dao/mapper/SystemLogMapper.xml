@@ -5,12 +5,13 @@
     <select id="getByType" resultType="com.poldichen.movie.entity.SystemLog">
         SELECT * from system_log
         where type like concat('%', #{type}, '%')
+        order by id desc
     </select>
 
 
     <insert id="createOne" parameterType="com.poldichen.movie.entity.SystemLog" useGeneratedKeys="true" keyProperty="systemLog.id" keyColumn="id">
-        insert into system_log (log_id, type, detail, create_at, update_at)
-        values (#{systemLog.logId}, #{systemLog.type}, #{systemLog.detail}, NOW(), NOW())
+        insert into system_log (log_id, level, type, detail, create_at, update_at)
+        values (#{systemLog.logId}, #{systemLog.level}, #{systemLog.type}, #{systemLog.detail}, NOW(), NOW())
     </insert>
 
 

@@ -25,6 +25,10 @@ public class SystemLog {
 
     @Getter
     @Setter
+    private String level;
+
+    @Getter
+    @Setter
     private String type;
 
     @Getter

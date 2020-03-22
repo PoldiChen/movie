@@ -79,14 +79,12 @@ public class MovieServiceImpl implements IMovieService {
         }
 
 
-
         List<Resource> resources = movie.getResources();
         if (resources != null) {
             for (Resource resource : resources) {
                 movieDao.addMovieResource(movieId, resource.getId());
             }
         }
-
 
         return movieId;
     }

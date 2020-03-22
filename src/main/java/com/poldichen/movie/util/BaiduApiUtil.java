@@ -1,11 +1,5 @@
 package com.poldichen.movie.util;
 
-import com.alibaba.fastjson.JSONArray;
-import com.sun.deploy.net.HttpResponse;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 

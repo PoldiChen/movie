@@ -38,15 +38,19 @@ public class Movie {
 
     @Getter
     @Setter
+    private String category;
+
+    @Getter
+    @Setter
+    private String label;
+
+    @Getter
+    @Setter
     private String publishDate;
 
     @Getter
     @Setter
     private String length;
-
-    @Getter
-    @Setter
-    private String type;
 
     @Getter
     @Setter
