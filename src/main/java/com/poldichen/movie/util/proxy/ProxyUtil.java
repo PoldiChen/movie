@@ -23,7 +23,7 @@ import java.util.Random;
 public class ProxyUtil {
 
     public static void main(String args[]) throws Exception {
-        test();
+        test2();
     }
 
     public static void test2() throws Exception {
@@ -31,12 +31,12 @@ public class ProxyUtil {
         String targetUrl = "https://movie.douban.com/subject/26348103/";
 
         // 代理服务器
-        String proxyServer = "123.171.5.133";
-        int proxyPort = 8118;
+        String proxyServer = "222.95.144.42";
+        int proxyPort = 3000;
 
         // 代理隧道验证信息
-        String proxyUser  = "username";
-        String proxyPass  = "password";
+        String proxyUser = "username";
+        String proxyPass = "password";
 
         try {
             URL url = new URL(targetUrl);
@@ -48,9 +48,9 @@ public class ProxyUtil {
             // 设置通过代理访问目标页面
             HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
             // 设置Proxy-Tunnel
-            // Random random = new Random();
-            // int tunnel = random.nextInt(10000);
-            // connection.setRequestProperty("Proxy-Tunnel",String.valueOf(tunnel));
+//             Random random = new Random();
+//             int tunnel = random.nextInt(10000);
+//             connection.setRequestProperty("Proxy-Tunnel",String.valueOf(tunnel));
 
             // 解析返回数据
             byte[] response = readStream(connection.getInputStream());
@@ -58,6 +58,7 @@ public class ProxyUtil {
             System.out.println(new String(response));
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
 
@@ -82,19 +83,24 @@ public class ProxyUtil {
         return outSteam.toByteArray();
     }
 
-    public static void test() throws Exception {
+    public static void test1() throws Exception {
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("110.87.176.33", 8118));
+        HttpURLConnection connection = (HttpURLConnection) new URL("https://movie.douban.com/subject/26348103").openConnection(proxy);
+        connection.setConnectTimeout(6000); // 6s
+        connection.setReadTimeout(6000);
+        connection.setUseCaches(false);
+        System.out.println(connection.usingProxy());
 
-        //        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("171.221.79.106", 8118));
-//        HttpURLConnection connection = (HttpURLConnection) new URL("https://movie.douban.com/subject/26348103").openConnection(proxy);
-//        connection.setConnectTimeout(6000); // 6s
-//        connection.setReadTimeout(6000);
-//        connection.setUseCaches(false);
+        System.out.println(connection.getResponseMessage());
+        System.out.println(connection.getResponseCode());
 //        if(connection.getResponseCode() == 200){
 //            System.out.println("使用代理IP连接网络成功");
 //        }
+    }
 
+    public static void test() throws Exception {
         System.getProperties().setProperty("proxySet", "true");
-        System.getProperties().setProperty("http.proxyHost", "123.171.5.133");
+        System.getProperties().setProperty("http.proxyHost", "110.87.176.33");
         System.getProperties().setProperty("http.proxyPort", "8118");
 
         HttpURLConnection connection = (HttpURLConnection)new URL("https://movie.douban.com/subject/26348103").openConnection();

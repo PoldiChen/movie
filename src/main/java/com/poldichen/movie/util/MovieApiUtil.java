@@ -44,7 +44,7 @@ public class MovieApiUtil {
     private static final String URL_GET_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
 
     private static final String AUTH
-            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTg0OTE4MDk2fQ.oNgjAjW0KU7Id4YcOUTvdtz_dm-_JPWgUuYX_lc1fpzCT4JcEAf9elW95tJgD6953JvwH1XRg5qu4rE6fQsgLQ";
+            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTg2MjAwNDEzfQ.NZ8sGkI6uwqZiY2wPCelMyJNHtzXRnESJCwKHw8xq8kth9WIvJ-N3NKhQ67k0YktGl4tf4mQdmqHiNNZBSKrrw";
 
 
     public static int updateActor(int actorId, Map<String, Object> params) {
@@ -127,10 +127,17 @@ public class MovieApiUtil {
         return result;
     }
 
-    public static int isActorExist(String code) {
+    public static int isActorExist(String code, String name) {
         Map<String, String> headerParams = new HashMap<>();
         headerParams.put("Authorization", AUTH);
-        String response = HttpClientUtil.doGet(URL_SEARCH_ACTOR + "?pageSize=1&pageNum=1&code=" + code, headerParams);
+        String url = URL_SEARCH_ACTOR + "?pageSize=1&pageNum=1";
+        if (code != null) {
+            url += "&code=" + code;
+        }
+        if (name != null) {
+            url += "&name=" + name;
+        }
+        String response = HttpClientUtil.doGet(url, headerParams);
         JSONObject responseObject = JSONObject.parseObject(response);
         JSONObject data = responseObject.getJSONObject("data");
         JSONArray list = data.getJSONArray("list");

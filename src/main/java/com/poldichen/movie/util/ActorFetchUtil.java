@@ -55,7 +55,7 @@ public class ActorFetchUtil {
     }
 
     public static void parseActorDetail(String actorName, String actorUrl, String actorCoverUrl) {
-        int actorId = MovieApiUtil.isActorExist(actorName);
+        int actorId = MovieApiUtil.isActorExist(null, actorName);
 
         // get actor detail document
         Document doc;

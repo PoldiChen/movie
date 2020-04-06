@@ -8,9 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -31,7 +29,24 @@ public class MovieFetchUtil {
     private static final String HOST = "https://www.busdmm.cloud"; // https://www.busdmm.cloud/MIAA-184
     private static final String URL_RESOURCE = "https://www.busdmm.cloud/ajax/uncledatoolsbyajax.php";
 
+    public static void main(String[] args) {
 
+        for (int index = 1; index < 100; index++) {
+            String movieListUrl = "https://www.busdmm.cloud/page/" + index;
+            parseMovieList(movieListUrl);
+        }
+    }
+
+    private static String getStackTrace(Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        try {
+            throwable.printStackTrace(pw);
+            return sw.toString();
+        } finally {
+            pw.close();
+        }
+    }
 
     public static void getResourceBatch() {
         List<Movie> movies = MovieApiUtil.getAllMovie();
@@ -113,16 +128,22 @@ public class MovieFetchUtil {
 
     }
 
-    public static void parseMovieDetail(String movieUrl, String movieCoverUrl) throws Exception {
-        Document doc = FetchUtil.getUrlDoc(movieUrl);
-        if (doc == null) {
+    public static void parseMovieDetail(String movieUrl, String movieCoverUrl) {
+        Document doc;
+        try {
+            doc = FetchUtil.getUrlDoc(movieUrl);
+        } catch (Exception e) {
+            Map<String, Object> systemLogParams = new HashMap<>();
+            systemLogParams.put("log_id", movieUrl);
+            systemLogParams.put("level", "ERROR");
+            systemLogParams.put("type", "get_movie_detail_fail");
+            systemLogParams.put("detail", getStackTrace(e));
+            MovieApiUtil.addSystemLog(systemLogParams);
             return;
         }
-
         // get movieName
         Element title = doc.select("h3").first();
         String movieName = title.text().substring(title.text().indexOf(" ") + 1);
-
         Element movieRow = doc.select("div[class=\"row movie\"]").first();
 
         // get movieCoverDetailUrl
@@ -146,7 +167,7 @@ public class MovieFetchUtil {
         String code = "0";
         String publishDate = "";
         String length = "";
-        String type = "";
+        String label = "";
         String producer = "";
         String publisher = "";
         String director = "";
@@ -158,7 +179,6 @@ public class MovieFetchUtil {
                 if (movieId != 0) {
                     return;
                 }
-
             }
             if (info.indexOf(PUBLISH_DATE_KEY) != -1) {
                 publishDate = info.substring(info.indexOf(" ")+1);
@@ -177,20 +197,20 @@ public class MovieFetchUtil {
             }
         }
 
-        // get movie type
-        Elements typeElements = movieInfo.select("span[class=\"genre\"]");
-        Iterator<Element> typeIterator = typeElements.iterator();
-        while (typeIterator.hasNext()) {
-            String typeVal = typeIterator.next().text();
-            boolean addType = true;
+        // get movie label
+        Elements labelElements = movieInfo.select("span[class=\"genre\"]");
+        Iterator<Element> labelIterator = labelElements.iterator();
+        while (labelIterator.hasNext()) {
+            String labelVal = labelIterator.next().text();
+            boolean addLabel = true;
             for (String actorName : actorNames) {
-                if (typeVal.equals(actorName)) {
-                    addType = false;
+                if (labelVal.equals(actorName)) {
+                    addLabel = false;
                     break;
                 }
             }
-            if (addType) {
-                type += typeVal + "|";
+            if (addLabel) {
+                label += labelVal + "|";
             }
         }
 
@@ -223,7 +243,7 @@ public class MovieFetchUtil {
         // add actor
         List<Integer> actorIds = new ArrayList<>();
         for (String actorName : actorNames) {
-            int actorId = MovieApiUtil.isActorExist(actorName);
+            int actorId = MovieApiUtil.isActorExist(null, actorName);
             if (actorId == 0) {
                 Map<String, Object> actorParams = new HashMap<>();
                 actorParams.put("name", actorName);
@@ -237,10 +257,11 @@ public class MovieFetchUtil {
         // add movie, relate picture, actor
         Map<String, Object> movieParams = new HashMap<>();
         movieParams.put("code", code);
+        movieParams.put("title", code);
         movieParams.put("name", movieName);
         movieParams.put("length", length);
         movieParams.put("publish_date", publishDate);
-        movieParams.put("type", type);
+        movieParams.put("label", label);
         movieParams.put("producer", producer);
         movieParams.put("publisher", publisher);
         movieParams.put("director", director);
@@ -252,6 +273,9 @@ public class MovieFetchUtil {
             movieActor.add(actorObj);
         }
         movieParams.put("actors", movieActor);
+
+        movieParams.put("directors", new ArrayList<>());
+        movieParams.put("writers", new ArrayList<>());
 
         List<Map<String, Object>> movieCover = new ArrayList<>();
         for (Integer coverId : coverIds) {
@@ -276,22 +300,23 @@ public class MovieFetchUtil {
             movieScreenshot.add(screenshotObj);
         }
         movieParams.put("screenshots", movieScreenshot);
-
         movieParams.put("resources", new ArrayList<>());
         MovieApiUtil.addMovie(movieParams);
-
         System.out.println("=======================================================");
     }
 
-    public static void parseMovieList(String url) throws Exception {
-        Document doc = FetchUtil.getUrlDoc(url);
-        if (doc == null) {
-            File file = new File("E:\\movie\\fail.txt");
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-            writer.write(url);
-            writer.newLine();
-            writer.flush();
-            writer.close();
+    public static void parseMovieList(String url) {
+        Document doc;
+        try {
+            doc = FetchUtil.getUrlDoc(url);
+        } catch (Exception e) {
+            Map<String, Object> systemLogParams = new HashMap<>();
+            systemLogParams.put("log_id", url);
+            systemLogParams.put("level", "ERROR");
+            systemLogParams.put("type", "get_movie_list_fail");
+            systemLogParams.put("detail", getStackTrace(e));
+            MovieApiUtil.addSystemLog(systemLogParams);
+            return;
         }
         Elements movies = doc.select("div[class=\"item\"]");
         Iterator<Element> iterator = movies.iterator();
@@ -310,6 +335,12 @@ public class MovieFetchUtil {
             }
             parseMovieDetail(movieUrl, movieCoverUrl);
         }
+        Map<String, Object> systemLogParams = new HashMap<>();
+        systemLogParams.put("log_id", url);
+        systemLogParams.put("level", "INFO");
+        systemLogParams.put("type", "parse_movie_list_finish");
+        systemLogParams.put("detail", "");
+        MovieApiUtil.addSystemLog(systemLogParams);
     }
 
     public static List<Integer> uploadPicture(String movieCode, String type, List<String> imgUrl) {

@@ -161,7 +161,7 @@ public class DoubanUtil {
         System.out.println(celebrityProfession);
         System.out.println(celebrityDescription);
 
-        int celebrityId = MovieApiUtil.isActorExist(celebrityCode);
+        int celebrityId = MovieApiUtil.isActorExist(celebrityCode, null);
         if (celebrityId == 0) {
             int pictureId = uploadPicture("celebrity_cover", celebrityCode, celebrityCoverUrl);
             Map<String, Object> actorParams = new HashMap<>();
