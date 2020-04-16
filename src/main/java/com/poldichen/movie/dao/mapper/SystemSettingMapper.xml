@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poldichen.movie.dao.ISystemSettingDao">
+
+    <select id="getAll" resultType="com.poldichen.movie.entity.SystemSetting">
+        SELECT * from system_setting
+    </select>
+
+    <insert id="createOne" parameterType="com.poldichen.movie.entity.SystemSetting" useGeneratedKeys="true" keyProperty="systemSetting.id" keyColumn="id">
+        insert into system_setting (setting_key, setting_value, comment, create_at, update_at)
+        values (#{systemSetting.settingKey}, #{systemSetting.settingValue}, #{systemSetting.comment}, NOW(), NOW())
+    </insert>
+
+    <insert id="update">
+        update system_setting
+        set setting_key = #{systemSetting.settingKey}, setting_value = #{systemSetting.settingValue}, comment = #{systemSetting.comment}, update_at = NOW()
+        where id = #{id}
+    </insert>
+
+
+</mapper>
