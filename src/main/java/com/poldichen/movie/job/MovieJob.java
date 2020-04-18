@@ -1,8 +1,12 @@
-package com.poldichen.movie.util;
+package com.poldichen.movie.job;
 
 import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Picture;
 import com.poldichen.movie.entity.Resource;
+import com.poldichen.movie.util.ExceptionUtil;
+import com.poldichen.movie.util.FetchUtil;
+import com.poldichen.movie.util.MovieApiUtil;
+import com.poldichen.movie.util.TimeUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,11 +17,11 @@ import java.util.*;
 
 /**
  * @author poldi.chen
- * @className MovieFetchUtil
+ * @className MovieJob
  * @description TODO
  * @date 2020/3/8 10:08
  **/
-public class MovieFetchUtil {
+public class MovieJob {
 
     private static final String LENGTH_KEY = "長度: ";
     private static final String CODE_KEY = "識別碼: ";
@@ -31,102 +35,28 @@ public class MovieFetchUtil {
 
     public static void main(String[] args) {
 
-        for (int index = 1; index < 100; index++) {
+        for (int index = 1; index < 20; index++) {
             String movieListUrl = "https://www.busdmm.cloud/page/" + index;
             parseMovieList(movieListUrl);
         }
     }
 
-    private static String getStackTrace(Throwable throwable) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        try {
-            throwable.printStackTrace(pw);
-            return sw.toString();
-        } finally {
-            pw.close();
-        }
+    public static void executeGetList(int indexEnd) {
+        new Thread(() -> {
+            for (int index = 1; index <= indexEnd; index++) {
+                String movieListUrl = "https://www.busdmm.cloud/page/" + index;
+                parseMovieList(movieListUrl);
+            }
+        }).start();
+
+        Map<String, Object> systemLogParams = new HashMap<>();
+        systemLogParams.put("log_id", "job-movie-list-download-" + TimeUtil.getTimeStr());
+        systemLogParams.put("type", "download_movie_list");
+        systemLogParams.put("level", "INFO");
+        systemLogParams.put("detail", "");
+        MovieApiUtil.addSystemLog(systemLogParams);
     }
 
-    public static void getResourceBatch() {
-        List<Movie> movies = MovieApiUtil.getAllMovie();
-        for (Movie movie : movies) {
-            List<Resource> resources = movie.getResources();
-            if (resources.size() == 0) {
-                getResource(movie.getTitle());
-            }
-        }
-    }
-
-    public static void getResource(String movieCode) {
-        System.out.println("get resource for: " + movieCode);
-        Document doc;
-        try {
-            doc = FetchUtil.getUrlDoc(HOST + "/" + movieCode);
-        } catch (Exception e) {
-            Map<String, Object> systemLogParams = new HashMap<>();
-            systemLogParams.put("log_id", movieCode);
-            systemLogParams.put("type", "get_movie_doc_fail");
-            systemLogParams.put("detail", e.getMessage());
-            MovieApiUtil.addSystemLog(systemLogParams);
-            return;
-        }
-
-        String docStr = doc.toString();
-        int index = docStr.indexOf("var gid = ");
-        if (index != -1) {
-            String gid = docStr.substring(index + 10, index + 10 + 11);
-            String resourceUrl = URL_RESOURCE + "?gid=" + gid + "&uc=0";
-            String refer = HOST + "/" + movieCode;
-
-            try {
-                doc = Jsoup.connect(resourceUrl)
-                        .maxBodySize(Integer.MAX_VALUE)
-                        .data("query", "Java")
-                        .cookie("auth", "token")
-                        .referrer(refer)
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134")
-                        .timeout(1000 * 30)
-                        .post();
-            } catch (Exception e) {
-                Map<String, Object> systemLogParams = new HashMap<>();
-                systemLogParams.put("log_id", movieCode);
-                systemLogParams.put("type", "get_movie_resource_fail");
-                systemLogParams.put("detail", e.getMessage());
-                MovieApiUtil.addSystemLog(systemLogParams);
-                return;
-            }
-
-            Elements anchors = doc.select("a[rel=\"nofollow\"]");
-            int groupSize = anchors.size() / 3;
-            List<Integer> resourceIds = new ArrayList<>();
-            for (int i = 0; i < groupSize; i++) {
-                String url = anchors.get(i*3).attr("href");
-                String showName = anchors.get(i*3).text();
-                String size = anchors.get(i*3+1).text();
-                String shareDate = anchors.get(i*3+2).text();
-                System.out.println(url);
-                System.out.println(showName);
-                System.out.println(size);
-                System.out.println(shareDate);
-
-                Map<String, Object> resourceParams = new HashMap<>();
-                resourceParams.put("url", url);
-                resourceParams.put("size", size);
-                resourceParams.put("show_name", showName);
-                resourceParams.put("share_date", shareDate);
-
-                int resourceId = MovieApiUtil.addResource(resourceParams);
-                resourceIds.add(resourceId);
-                System.out.println("========================");
-            }
-            int movieId = MovieApiUtil.isMovieExist(movieCode);
-            Map<String, Object> updateParams = new HashMap<>();
-            updateParams.put("resource_id", resourceIds);
-            MovieApiUtil.updateMovieResource(movieId, updateParams);
-        }
-
-    }
 
     public static void parseMovieDetail(String movieUrl, String movieCoverUrl) {
         Document doc;
@@ -137,7 +67,7 @@ public class MovieFetchUtil {
             systemLogParams.put("log_id", movieUrl);
             systemLogParams.put("level", "ERROR");
             systemLogParams.put("type", "get_movie_detail_fail");
-            systemLogParams.put("detail", getStackTrace(e));
+            systemLogParams.put("detail", ExceptionUtil.getStackTrace(e));
             MovieApiUtil.addSystemLog(systemLogParams);
             return;
         }
@@ -314,7 +244,7 @@ public class MovieFetchUtil {
             systemLogParams.put("log_id", url);
             systemLogParams.put("level", "ERROR");
             systemLogParams.put("type", "get_movie_list_fail");
-            systemLogParams.put("detail", getStackTrace(e));
+            systemLogParams.put("detail", ExceptionUtil.getStackTrace(e));
             MovieApiUtil.addSystemLog(systemLogParams);
             return;
         }

@@ -44,8 +44,7 @@ public class MovieApiUtil {
     private static final String URL_GET_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
 
     private static final String AUTH
-            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTg2MjAwNDEzfQ.NZ8sGkI6uwqZiY2wPCelMyJNHtzXRnESJCwKHw8xq8kth9WIvJ-N3NKhQ67k0YktGl4tf4mQdmqHiNNZBSKrrw";
-
+            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTg3MjE1Mzk4fQ.fbaY32WXogzAMH0RttaXK2CxM5R3WtpDTuzDN8MP1xs9tK2KWzGXIYO7b2qi_bFx4I0WBnT2H0gvplpSZP9tkA";
 
     public static int updateActor(int actorId, Map<String, Object> params) {
         String response = HttpClientUtil.doPut(URL_UPDATE_ACTOR + "/" + actorId, AUTH, params);
@@ -178,5 +177,9 @@ public class MovieApiUtil {
         HttpHeaders responseHeaders = response.getHeaders();
         System.out.println(responseHeaders.get("Authorization"));
 //        HttpClientUtil.doPost(url, "", params);
+    }
+
+    public static void main(String[] args) {
+        getAuth("jack", "123456");
     }
 }
