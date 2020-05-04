@@ -21,7 +21,8 @@ import java.util.*;
  * @description TODO
  * @date 2020/3/8 10:08
  **/
-public class MovieJob {
+@JobAnnotation
+public class MovieJob implements IJob {
 
     private static final String LENGTH_KEY = "長度: ";
     private static final String CODE_KEY = "識別碼: ";
@@ -35,7 +36,16 @@ public class MovieJob {
 
     public static void main(String[] args) {
 
-        for (int index = 1; index < 20; index++) {
+        for (int index = 1; index < 50; index++) {
+            String movieListUrl = "https://www.busdmm.cloud/page/" + index;
+            parseMovieList(movieListUrl);
+        }
+    }
+
+    @Override
+    public void execute(String... args) {
+        String endIndex = args[0];
+        for (int index = 1; index < Integer.parseInt(endIndex); index++) {
             String movieListUrl = "https://www.busdmm.cloud/page/" + index;
             parseMovieList(movieListUrl);
         }
@@ -291,4 +301,6 @@ public class MovieJob {
         }
         return result;
     }
+
+
 }

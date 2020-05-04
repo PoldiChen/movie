@@ -19,11 +19,16 @@ import java.util.Map;
  * @description TODO
  * @date 2020/4/18 11:22
  **/
-public class MovieResourceJob {
+@JobAnnotation
+public class MovieResourceJob implements IJob {
 
     private static final String HOST = "https://www.busdmm.cloud"; // https://www.busdmm.cloud/MIAA-184
     private static final String URL_RESOURCE = "https://www.busdmm.cloud/ajax/uncledatoolsbyajax.php";
 
+    @Override
+    public void execute(String... args) {
+        //
+    }
 
     public static void getResourceBatch() {
         List<Movie> movies = MovieApiUtil.getAllMovie();

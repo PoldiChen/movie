@@ -21,6 +21,7 @@ import java.util.Map;
  * @description TODO
  * @date 2020/4/18 10:57
  **/
+@JobAnnotation
 public class PictureJob {
 
     public static void main(String[] args) {
