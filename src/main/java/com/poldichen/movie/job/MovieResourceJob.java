@@ -20,13 +20,12 @@ import java.util.Map;
  * @date 2020/4/18 11:22
  **/
 @JobAnnotation
-public class MovieResourceJob implements IJob {
+public class MovieResourceJob {
 
     private static final String HOST = "https://www.busdmm.cloud"; // https://www.busdmm.cloud/MIAA-184
     private static final String URL_RESOURCE = "https://www.busdmm.cloud/ajax/uncledatoolsbyajax.php";
 
-    @Override
-    public void execute(String... args) {
+    public void execute(String parameter) {
         //
     }
 

@@ -9,11 +9,11 @@ import org.reflections.Reflections;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Parameter;
+import java.util.*;
 
 /**
  * @author poldi.chen
@@ -21,19 +21,39 @@ import java.util.Set;
  * @description TODO
  * @date 2020/4/18 11:41
  **/
+@RestController
 public class JobController {
 
+
+    @RequestMapping(value="/job", method = RequestMethod.GET)
     public Resp getAllJobs() {
         Resp resp = new Resp();
-        Reflections reflections = new Reflections("reflection.*");
+        Reflections reflections = new Reflections("com.poldichen.movie.job.*");
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(JobAnnotation.class);
 
-        List<String> className = new ArrayList<>();
+        List<Map<String, Object>> jobs = new ArrayList<>();
         try {
-            for (Class<?> clazz : classes){
-                className.add(clazz.getCanonicalName());
+            for (Class<?> clazz : classes) {
+                Map<String, Object> job = new HashMap<>();
+                job.put("job_name", clazz.getCanonicalName());
+                List<Map<String, String>> parameterList = new ArrayList<>();
+                Method[] methods = clazz.getMethods();
+                for (Method method : methods) {
+                    if (method.getName().equals("execute")) {
+                        Parameter[] parameters = method.getParameters();
+                        for (Parameter parameter : parameters) {
+                            Map<String, String> parameterMap = new HashMap<>();
+                            parameterMap.put("param_name", parameter.getName());
+                            parameterMap.put("param_type", parameter.getType().toString());
+                            parameterList.add(parameterMap);
+                        }
+                    }
+                }
+                job.put("parameter", parameterList);
+
+                jobs.add(job);
             }
-            resp.setData(className);
+            resp.setData(jobs);
         } catch (Exception e) {
             resp.setCode(-1);
             resp.setMessage(e.getMessage());

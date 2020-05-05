@@ -30,6 +30,10 @@ public class PictureJob {
         executeDownloadPicture(dic, keyWord);
     }
 
+    public void execute(String directory, String keyWord) {
+        //
+    }
+
     public static void executeDownloadPicture(String directory, String keyWord) {
         new Thread(() -> {
             List<Picture> pictures = MovieApiUtil.getPicture(keyWord);

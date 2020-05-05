@@ -22,7 +22,7 @@ import java.util.*;
  * @date 2020/3/8 10:08
  **/
 @JobAnnotation
-public class MovieJob implements IJob {
+public class MovieJob {
 
     private static final String LENGTH_KEY = "長度: ";
     private static final String CODE_KEY = "識別碼: ";
@@ -42,9 +42,7 @@ public class MovieJob implements IJob {
         }
     }
 
-    @Override
-    public void execute(String... args) {
-        String endIndex = args[0];
+    public void execute(String endIndex) {
         for (int index = 1; index < Integer.parseInt(endIndex); index++) {
             String movieListUrl = "https://www.busdmm.cloud/page/" + index;
             parseMovieList(movieListUrl);
