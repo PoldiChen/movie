@@ -43,39 +43,38 @@ public class MovieApiUtil {
     private static final String URL_ADD_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
     private static final String URL_GET_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
 
-    private static final String AUTH
-            = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNrIiwiZXhwIjoxNTg3MjE1Mzk4fQ.fbaY32WXogzAMH0RttaXK2CxM5R3WtpDTuzDN8MP1xs9tK2KWzGXIYO7b2qi_bFx4I0WBnT2H0gvplpSZP9tkA";
+    private static String auth = "";
 
     public static int updateActor(int actorId, Map<String, Object> params) {
-        String response = HttpClientUtil.doPut(URL_UPDATE_ACTOR + "/" + actorId, AUTH, params);
+        String response = HttpClientUtil.doPut(URL_UPDATE_ACTOR + "/" + actorId, auth, params);
         JSONObject jsonObject = JSONObject.parseObject(response);
         int result = jsonObject.getInteger("data");
         return result;
     }
 
     public static int updateMovieResource(int movieId, Map<String, Object> params) {
-        String response = HttpClientUtil.doPut(URL_UPDATE_MOVIE_RESOURCE + "/" + movieId + "/resource", AUTH, params);
+        String response = HttpClientUtil.doPut(URL_UPDATE_MOVIE_RESOURCE + "/" + movieId + "/resource", auth, params);
         JSONObject jsonObject = JSONObject.parseObject(response);
         int result = jsonObject.getInteger("data");
         return result;
     }
 
     public static int addSystemLog(Map<String, Object> params) {
-        String response = HttpClientUtil.doPost(URL_ADD_SYSTEM_LOG, AUTH, params);
+        String response = HttpClientUtil.doPost(URL_ADD_SYSTEM_LOG, auth, params);
         JSONObject jsonObject = JSONObject.parseObject(response);
         int result = jsonObject.getInteger("data");
         return result;
     }
 
     public static int addProxyAddress(Map<String, Object> params) {
-        String response = HttpClientUtil.doPost(URL_ADD_PROXY_ADDRESS, AUTH, params);
+        String response = HttpClientUtil.doPost(URL_ADD_PROXY_ADDRESS, auth, params);
         JSONObject jsonObject = JSONObject.parseObject(response);
         int result = jsonObject.getInteger("data");
         return result;
     }
 
     public static int addResource(Map<String, Object> params) {
-        String response = HttpClientUtil.doPost(URL_ADD_RESOURCE, AUTH, params);
+        String response = HttpClientUtil.doPost(URL_ADD_RESOURCE, auth, params);
         JSONObject jsonObject = JSONObject.parseObject(response);
         int result = jsonObject.getInteger("data");
         return result;
@@ -83,7 +82,7 @@ public class MovieApiUtil {
 
     public static List<Picture> getPicture(String fileName) {
         Map<String, String> headerParams = new HashMap<>();
-        headerParams.put("Authorization", AUTH);
+        headerParams.put("Authorization", auth);
         String response = HttpClientUtil.doGet(URL_SEARCH_PICTURE + "?file_name=" + fileName, headerParams);
         JSONObject jsonObject = JSONObject.parseObject(response);
         List<Picture> pictures = JSON.parseObject(jsonObject.getString("data"), new TypeReference<List<Picture>>(){});
@@ -92,7 +91,7 @@ public class MovieApiUtil {
 
     public static List<ProxyAddress> getProxyAddress() {
         Map<String, String> headerParams = new HashMap<>();
-        headerParams.put("Authorization", AUTH);
+        headerParams.put("Authorization", auth);
         String response = HttpClientUtil.doGet(URL_GET_PROXY_ADDRESS, headerParams);
         JSONObject jsonObject = JSONObject.parseObject(response);
         List<ProxyAddress> proxyAddresses = JSON.parseObject(jsonObject.getString("data"), new TypeReference<List<ProxyAddress>>(){});
@@ -101,7 +100,7 @@ public class MovieApiUtil {
 
     public static List<Movie> getAllMovie() {
         Map<String, String> headerParams = new HashMap<>();
-        headerParams.put("Authorization", AUTH);
+        headerParams.put("Authorization", auth);
         String response = HttpClientUtil.doGet(URL_SEARCH_MOVIE, headerParams);
         JSONObject jsonObject = JSONObject.parseObject(response);
         List<Movie> movies = JSON.parseObject(jsonObject.getString("data"), new TypeReference<List<Movie>>(){});
@@ -109,18 +108,18 @@ public class MovieApiUtil {
     }
 
     public static int addPicture(Map<String, Object> params) {
-        String response = HttpClientUtil.doPost(URL_ADD_PICTURE, AUTH, params);
+        String response = HttpClientUtil.doPost(URL_ADD_PICTURE, auth, params);
         JSONObject jsonObject = JSONObject.parseObject(response);
         int result = jsonObject.getInteger("data");
         return result;
     }
 
     public static String addMovie(Map<String, Object> params) {
-        return HttpClientUtil.doPost(URL_ADD_MOVIE, AUTH, params);
+        return HttpClientUtil.doPost(URL_ADD_MOVIE, auth, params);
     }
 
     public static int addActor(Map<String, Object> params) {
-        String response = HttpClientUtil.doPost(URL_ADD_ACTOR, AUTH, params);
+        String response = HttpClientUtil.doPost(URL_ADD_ACTOR, auth, params);
         JSONObject jsonObject = JSONObject.parseObject(response);
         int result = jsonObject.getInteger("data");
         return result;
@@ -128,7 +127,7 @@ public class MovieApiUtil {
 
     public static int isActorExist(String code, String name) {
         Map<String, String> headerParams = new HashMap<>();
-        headerParams.put("Authorization", AUTH);
+        headerParams.put("Authorization", auth);
         String url = URL_SEARCH_ACTOR + "?pageSize=1&pageNum=1";
         if (code != null) {
             url += "&code=" + code;
@@ -150,7 +149,7 @@ public class MovieApiUtil {
 
     public static int isMovieExist(String movieCode) {
         Map<String, String> headerParams = new HashMap<>();
-        headerParams.put("Authorization", AUTH);
+        headerParams.put("Authorization", auth);
         String response = HttpClientUtil.doGet(URL_SEARCH_MOVIE + "?pageSize=1&pageNum=1&code=" + movieCode, headerParams);
         JSONObject responseObject = JSONObject.parseObject(response);
         JSONObject data1 = responseObject.getJSONObject("data");
@@ -164,22 +163,22 @@ public class MovieApiUtil {
     }
 
     public static void getAuth(String userName, String password) {
-        String url = "http://localhost:8080/login";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
         Map<String, Object> params = new HashMap<>();
         params.put("userName", userName);
         params.put("password", password);
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        headers.add("Authorization", "");
+        headers.add("content-type", "text/html;charset=utf-8");
+        HttpEntity<String> requestEntity = new HttpEntity<>(JSONObject.toJSONString(params), headers);
+        ResponseEntity<String> response = restTemplate.exchange("http://localhost:8080/login", HttpMethod.POST, requestEntity, String.class);
         HttpHeaders responseHeaders = response.getHeaders();
-        System.out.println(responseHeaders.get("Authorization"));
-//        HttpClientUtil.doPost(url, "", params);
+        auth = responseHeaders.get("Authorization").toString();
     }
 
     public static void main(String[] args) {
-        getAuth("jack", "123456");
+
+//        String result = getAuth("jack", "123456");
+//        System.out.println(result);
     }
 }

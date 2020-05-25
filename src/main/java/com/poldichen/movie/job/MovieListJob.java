@@ -17,12 +17,12 @@ import java.util.*;
 
 /**
  * @author poldi.chen
- * @className MovieJob
+ * @className MovieListJob
  * @description TODO
  * @date 2020/3/8 10:08
  **/
 @JobAnnotation
-public class MovieJob {
+public class MovieListJob {
 
     private static final String LENGTH_KEY = "長度: ";
     private static final String CODE_KEY = "識別碼: ";
@@ -36,8 +36,8 @@ public class MovieJob {
 
     public static void main(String[] args) {
 
-        for (int index = 1; index < 50; index++) {
-            String movieListUrl = "https://www.busdmm.cloud/page/" + index;
+        for (int index = 1; index < 100; index++) {
+            String movieListUrl = "https://www.buscdn.cam/page/" + index;
             parseMovieList(movieListUrl);
         }
     }

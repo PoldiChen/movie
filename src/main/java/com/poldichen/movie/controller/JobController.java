@@ -3,7 +3,7 @@ package com.poldichen.movie.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.poldichen.movie.entity.Resp;
 import com.poldichen.movie.job.JobAnnotation;
-import com.poldichen.movie.job.MovieJob;
+import com.poldichen.movie.job.MovieListJob;
 import com.poldichen.movie.job.PictureJob;
 import org.reflections.Reflections;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,22 +62,46 @@ public class JobController {
         return resp;
     }
 
-    @RequestMapping(value = "/job/movie", method = RequestMethod.POST)
-    public Resp createMovieJob(@RequestBody String param) {
+    @RequestMapping(value = "/job", method = RequestMethod.POST)
+    public Resp createJob(@RequestBody String param) {
         Resp resp = new Resp();
         JSONObject jsonObject = JSONObject.parseObject(param);
-        int indexEnd = jsonObject.getInteger("index_end");
-        MovieJob.executeGetList(indexEnd);
+
+
+
+        try {
+
+            Class clazz = Class.forName("com.poldichen.movie.job.CelebrityJob");
+            Method method = clazz.getMethod("execute");
+            method.invoke(clazz, "a", "b");
+
+        } catch (Exception e) {
+            resp.setCode(-1);
+            resp.setMessage(e.getMessage());
+        }
+
         return resp;
     }
 
-    @RequestMapping(value = "/job/picture", method = RequestMethod.POST)
-    public Resp createPictureJob(@RequestBody String param) {
-        Resp resp = new Resp();
-        JSONObject jsonObject = JSONObject.parseObject(param);
-        String directory = jsonObject.getString("directory");
-        String keyWord = jsonObject.getString("key_word");
-        PictureJob.executeDownloadPicture(directory, keyWord);
-        return resp;
+    public static void main(String[] args) {
+        try {
+
+            Class clazz = Class.forName("com.poldichen.movie.job.CelebrityJob");
+
+            Method[] methods = clazz.getMethods();
+            for (Method method : methods) {
+                if (method.getName().equals("execute")) {
+                    method.invoke(clazz, "a", "b");
+                }
+            }
+
+//            Method method = clazz.getMethod("execute", String.class, String.class);
+//            method.invoke(clazz, "a", "b");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+
 }
