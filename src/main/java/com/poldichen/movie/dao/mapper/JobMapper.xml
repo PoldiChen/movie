@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poldichen.movie.dao.IJobDao">
+
+    <insert id="createOne" parameterType="com.poldichen.movie.entity.Job" useGeneratedKeys="true" keyProperty="resource.id" keyColumn="id">
+        insert into job (job_name, class_name, arguments, status, create_at, update_at)
+        values (#{job.jobName}, #{job.className}, #{job.arguments}, #{job.status}, NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        update job
+        set job_name = #{job.jobName}, class_name = #{job.className}, arguments = #{job.arguments}, status = #{job.status}, update_at = NOW()
+        where id = #{id}
+    </update>
+
+
+</mapper>

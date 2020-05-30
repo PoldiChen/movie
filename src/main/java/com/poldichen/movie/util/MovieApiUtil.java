@@ -43,7 +43,7 @@ public class MovieApiUtil {
     private static final String URL_ADD_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
     private static final String URL_GET_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
 
-    private static String auth = "";
+    private static String auth = "empty";
 
     public static int updateActor(int actorId, Map<String, Object> params) {
         String response = HttpClientUtil.doPut(URL_UPDATE_ACTOR + "/" + actorId, auth, params);
@@ -60,6 +60,8 @@ public class MovieApiUtil {
     }
 
     public static int addSystemLog(Map<String, Object> params) {
+        System.out.println("addSystemLog");
+        System.out.println(auth);
         String response = HttpClientUtil.doPost(URL_ADD_SYSTEM_LOG, auth, params);
         JSONObject jsonObject = JSONObject.parseObject(response);
         int result = jsonObject.getInteger("data");
@@ -173,12 +175,9 @@ public class MovieApiUtil {
         HttpEntity<String> requestEntity = new HttpEntity<>(JSONObject.toJSONString(params), headers);
         ResponseEntity<String> response = restTemplate.exchange("http://localhost:8080/login", HttpMethod.POST, requestEntity, String.class);
         HttpHeaders responseHeaders = response.getHeaders();
-        auth = responseHeaders.get("Authorization").toString();
+        auth = responseHeaders.get("Authorization").toString().replace("[", "").replace("]", "");
+        System.out.println("getAuth");
+        System.out.println(auth);
     }
 
-    public static void main(String[] args) {
-
-//        String result = getAuth("jack", "123456");
-//        System.out.println(result);
-    }
 }

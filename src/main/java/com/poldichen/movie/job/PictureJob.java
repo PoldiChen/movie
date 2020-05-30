@@ -30,6 +30,8 @@ public class PictureJob {
         executeDownloadPicture(dic, keyWord);
     }
 
+    public void executeDeclare(String param1, String param2) {}
+
     public void execute(String directory, String keyWord) {
         //
     }

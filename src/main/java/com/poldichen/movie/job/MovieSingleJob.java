@@ -1,19 +1,13 @@
 package com.poldichen.movie.job;
 
-import com.poldichen.movie.common.Constants;
-import com.poldichen.movie.entity.Movie;
-import com.poldichen.movie.entity.Picture;
-import com.poldichen.movie.entity.Resource;
 import com.poldichen.movie.util.ExceptionUtil;
 import com.poldichen.movie.util.FetchUtil;
 import com.poldichen.movie.util.MovieApiUtil;
 import com.poldichen.movie.util.TimeUtil;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.*;
 import java.util.*;
 
 /**
@@ -23,7 +17,7 @@ import java.util.*;
  * @date 2020/3/8 10:08
  **/
 @JobAnnotation
-public class MovieListJob {
+public class MovieSingleJob {
 
     private static final String LENGTH_KEY = "長度: ";
     private static final String CODE_KEY = "識別碼: ";
@@ -32,6 +26,7 @@ public class MovieListJob {
     private static final String PUBLISHER_KEY = "發行商: ";
     private static final String DIRECTOR_KEY = "導演: ";
 
+    private static final String HOST = "https://www.busdmm.cloud"; // https://www.busdmm.cloud/MIAA-184
     private static final String URL_RESOURCE = "https://www.busdmm.cloud/ajax/uncledatoolsbyajax.php";
 
     public static void main(String[] args) {
@@ -42,21 +37,22 @@ public class MovieListJob {
         }
     }
 
-    public void executeDeclare(String endPageIndex) {}
+    public void executeDeclare(String param1, String param2) {}
 
-    public void execute(String args) {
-        String[] array = args.split(",");
-        int endIndex = Integer.parseInt(array[0]);
-        MovieApiUtil.getAuth("jack", "123456");
+    public void execute(String movieCode) {
+        String url = "https://www.busdmm.cloud/" + movieCode;
+    }
+
+    public static void executeGetList(int indexEnd) {
         new Thread(() -> {
-            for (int index = 1; index <= endIndex; index++) {
-                String movieListUrl = Constants.HOST + "/page/" + index;
+            for (int index = 1; index <= indexEnd; index++) {
+                String movieListUrl = "https://www.busdmm.cloud/page/" + index;
                 parseMovieList(movieListUrl);
             }
         }).start();
 
         Map<String, Object> systemLogParams = new HashMap<>();
-        systemLogParams.put("log_id", "job-movie-list-" + TimeUtil.getTimeStr());
+        systemLogParams.put("log_id", "job-movie-list-download-" + TimeUtil.getTimeStr());
         systemLogParams.put("type", "download_movie_list");
         systemLogParams.put("level", "INFO");
         systemLogParams.put("detail", "");

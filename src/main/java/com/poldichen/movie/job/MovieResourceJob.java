@@ -29,6 +29,8 @@ public class MovieResourceJob {
         //
     }
 
+    public void executeDeclare(String param1, String param2) {}
+
     public static void getResourceBatch() {
         List<Movie> movies = MovieApiUtil.getAllMovie();
         for (Movie movie : movies) {

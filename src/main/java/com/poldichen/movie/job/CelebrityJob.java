@@ -10,9 +10,10 @@ package com.poldichen.movie.job;
 @JobAnnotation
 public class CelebrityJob {
 
-    public static void execute(String param1, String param2) {
+    public void executeDeclare(String param1, String param2) {}
+
+    public static void execute(String args) {
         System.out.println("CelebrityJob@execute");
-        System.out.println(param1);
-        System.out.println(param2);
+        System.out.println(args);
     }
 }
