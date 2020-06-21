@@ -2,6 +2,7 @@ package com.poldichen.movie.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.poldichen.movie.config.MovieConfig;
 import com.poldichen.movie.entity.Job;
 import com.poldichen.movie.entity.Resp;
 import com.poldichen.movie.job.JobAnnotation;
@@ -10,6 +11,7 @@ import com.poldichen.movie.job.PictureJob;
 import com.poldichen.movie.service.inter.IJobService;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,9 +38,14 @@ public class JobController {
     private static final String METHOD_DECLARE = "executeDeclare";
     private static final String METHOD_EXECUTE = "execute";
 
+    @Autowired
+    private MovieConfig movieConfig;
+
 
     @RequestMapping(value="/job", method = RequestMethod.GET)
     public Resp getAllJobs() {
+        System.out.println("JobController@getAllJobs");
+        System.out.println(movieConfig.getHost());
         Resp resp = new Resp();
         Reflections reflections = new Reflections(JOB_PACKAGE);
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(JobAnnotation.class);

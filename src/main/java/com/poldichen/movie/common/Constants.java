@@ -15,6 +15,4 @@ public class Constants {
     public static final String TIME_FORMAT_STR = "yyyyMMddHHmmss";
 
     public static final String TIME_ZONE = "GMT+8"; // 时区
-
-    public static final String HOST = "https://www.buscdn.cam";
 }

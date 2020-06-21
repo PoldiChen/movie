@@ -1,5 +1,6 @@
 package com.poldichen.movie.job;
 
+import com.poldichen.movie.config.MovieConfig;
 import com.poldichen.movie.util.ExceptionUtil;
 import com.poldichen.movie.util.FetchUtil;
 import com.poldichen.movie.util.MovieApiUtil;
@@ -26,8 +27,7 @@ public class MovieSingleJob {
     private static final String PUBLISHER_KEY = "發行商: ";
     private static final String DIRECTOR_KEY = "導演: ";
 
-    private static final String HOST = "https://www.busdmm.cloud"; // https://www.busdmm.cloud/MIAA-184
-    private static final String URL_RESOURCE = "https://www.busdmm.cloud/ajax/uncledatoolsbyajax.php";
+    private MovieConfig movieConfig;
 
     public static void main(String[] args) {
 
@@ -40,13 +40,13 @@ public class MovieSingleJob {
     public void executeDeclare(String param1, String param2) {}
 
     public void execute(String movieCode) {
-        String url = "https://www.busdmm.cloud/" + movieCode;
+        String url = movieConfig.getHost() + "/" + movieCode;
     }
 
-    public static void executeGetList(int indexEnd) {
+    public void executeGetList(int indexEnd) {
         new Thread(() -> {
             for (int index = 1; index <= indexEnd; index++) {
-                String movieListUrl = "https://www.busdmm.cloud/page/" + index;
+                String movieListUrl = movieConfig.getHost() + "/page/" + index;
                 parseMovieList(movieListUrl);
             }
         }).start();

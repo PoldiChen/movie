@@ -1,5 +1,6 @@
 package com.poldichen.movie.job;
 
+import com.poldichen.movie.config.MovieConfig;
 import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Resource;
 import com.poldichen.movie.util.FetchUtil;
@@ -7,6 +8,7 @@ import com.poldichen.movie.util.MovieApiUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,8 +24,8 @@ import java.util.Map;
 @JobAnnotation
 public class MovieResourceJob {
 
-    private static final String HOST = "https://www.busdmm.cloud"; // https://www.busdmm.cloud/MIAA-184
-    private static final String URL_RESOURCE = "https://www.busdmm.cloud/ajax/uncledatoolsbyajax.php";
+    @Autowired
+    private MovieConfig movieConfig;
 
     public void execute(String parameter) {
         //
@@ -31,7 +33,7 @@ public class MovieResourceJob {
 
     public void executeDeclare(String param1, String param2) {}
 
-    public static void getResourceBatch() {
+    public void getResourceBatch() {
         List<Movie> movies = MovieApiUtil.getAllMovie();
         for (Movie movie : movies) {
             List<Resource> resources = movie.getResources();
@@ -41,11 +43,11 @@ public class MovieResourceJob {
         }
     }
 
-    public static void getResource(String movieCode) {
+    public void getResource(String movieCode) {
         System.out.println("get resource for: " + movieCode);
         Document doc;
         try {
-            doc = FetchUtil.getUrlDoc(HOST + "/" + movieCode);
+            doc = FetchUtil.getUrlDoc(movieConfig.getHost() + "/" + movieCode);
         } catch (Exception e) {
             Map<String, Object> systemLogParams = new HashMap<>();
             systemLogParams.put("log_id", movieCode);
@@ -59,8 +61,8 @@ public class MovieResourceJob {
         int index = docStr.indexOf("var gid = ");
         if (index != -1) {
             String gid = docStr.substring(index + 10, index + 10 + 11);
-            String resourceUrl = URL_RESOURCE + "?gid=" + gid + "&uc=0";
-            String refer = HOST + "/" + movieCode;
+            String resourceUrl = movieConfig.getHost() + movieConfig.getUrlResource() + "?gid=" + gid + "&uc=0";
+            String refer = movieConfig.getHost() + "/" + movieCode;
 
             try {
                 doc = Jsoup.connect(resourceUrl)

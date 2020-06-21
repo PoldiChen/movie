@@ -26,3 +26,7 @@ jwt:
 logging:
   level:
     com.poldichen.movie.dao: debug
+
+movie:
+  host: https://www.dc.cam
+  url-resource: /ajax/uncledatoolsbyajax.php

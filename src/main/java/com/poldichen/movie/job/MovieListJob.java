@@ -1,19 +1,14 @@
 package com.poldichen.movie.job;
 
-import com.poldichen.movie.common.Constants;
-import com.poldichen.movie.entity.Movie;
-import com.poldichen.movie.entity.Picture;
-import com.poldichen.movie.entity.Resource;
+import com.poldichen.movie.config.MovieConfig;
 import com.poldichen.movie.util.ExceptionUtil;
 import com.poldichen.movie.util.FetchUtil;
 import com.poldichen.movie.util.MovieApiUtil;
 import com.poldichen.movie.util.TimeUtil;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.io.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 /**
@@ -32,15 +27,8 @@ public class MovieListJob {
     private static final String PUBLISHER_KEY = "發行商: ";
     private static final String DIRECTOR_KEY = "導演: ";
 
-    private static final String URL_RESOURCE = "https://www.busdmm.cloud/ajax/uncledatoolsbyajax.php";
-
-    public static void main(String[] args) {
-
-        for (int index = 1; index < 100; index++) {
-            String movieListUrl = "https://www.buscdn.cam/page/" + index;
-            parseMovieList(movieListUrl);
-        }
-    }
+    @Autowired
+    private MovieConfig movieConfig;
 
     public void executeDeclare(String endPageIndex) {}
 
@@ -50,7 +38,7 @@ public class MovieListJob {
         MovieApiUtil.getAuth("jack", "123456");
         new Thread(() -> {
             for (int index = 1; index <= endIndex; index++) {
-                String movieListUrl = Constants.HOST + "/page/" + index;
+                String movieListUrl = movieConfig.getHost() + "/page/" + index;
                 parseMovieList(movieListUrl);
             }
         }).start();
