@@ -29,13 +29,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-//        List<String> list = new ArrayList<>();
-//        list.add("a");
         UserDTO userDto = new UserDTO();
         userDto.setUserName(username);
         userDto.setPassword(user.getPassword());
         return userDto;
-//        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), new ArrayList<>());
     }
 
 }
