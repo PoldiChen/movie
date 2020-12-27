@@ -23,7 +23,8 @@ import java.util.Random;
 public class ProxyUtil {
 
     public static void main(String args[]) throws Exception {
-        test2();
+//        test2();
+        test1();
     }
 
     public static void test2() throws Exception {
@@ -48,9 +49,9 @@ public class ProxyUtil {
             // 设置通过代理访问目标页面
             HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
             // 设置Proxy-Tunnel
-//             Random random = new Random();
-//             int tunnel = random.nextInt(10000);
-//             connection.setRequestProperty("Proxy-Tunnel",String.valueOf(tunnel));
+             Random random = new Random();
+             int tunnel = random.nextInt(10000);
+             connection.setRequestProperty("Proxy-Tunnel",String.valueOf(tunnel));
 
             // 解析返回数据
             byte[] response = readStream(connection.getInputStream());

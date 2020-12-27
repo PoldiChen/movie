@@ -43,7 +43,7 @@ public class MovieApiUtil {
     private static final String URL_ADD_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
     private static final String URL_GET_PROXY_ADDRESS = "http://localhost:8080/proxy_address";
 
-    private static String auth = "empty";
+    private static String auth = "marker-eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwb2xkaSIsImV4cCI6MTYwOTA3NzU3OX0.aXGa_lgQiNKkY665xChm_VxMO9x1Fnb0HWqI-m7OGoB8HKYhvI_2PiFyI8y3on36IMukgqZCXP4q9_ZIa5Xgiw";
 
     public static int updateActor(int actorId, Map<String, Object> params) {
         String response = HttpClientUtil.doPut(URL_UPDATE_ACTOR + "/" + actorId, auth, params);

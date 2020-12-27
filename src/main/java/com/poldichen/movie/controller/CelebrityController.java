@@ -6,7 +6,10 @@ import com.github.pagehelper.PageInfo;
 import com.poldichen.movie.entity.Celebrity;
 import com.poldichen.movie.entity.Movie;
 import com.poldichen.movie.entity.Resp;
+import com.poldichen.movie.job.MovieSingleJob;
 import com.poldichen.movie.service.inter.ICelebrityService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +26,8 @@ import java.util.Map;
 @RestController
 public class CelebrityController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CelebrityController.class);
+
     @Autowired
     private ICelebrityService celebrityService;
 
@@ -31,6 +36,7 @@ public class CelebrityController {
                        @RequestParam(value = "pageSize") int pageSize,
                        @RequestParam(value = "code", required = false) String celebrityCode,
                        @RequestParam(value = "name", required = false) String celebrityName) {
+        logger.info("CelebrityController@getAll");
         Resp resp = new Resp();
         Map<String, String> paramsMap = new HashMap<>();
         paramsMap.put("code", celebrityCode);

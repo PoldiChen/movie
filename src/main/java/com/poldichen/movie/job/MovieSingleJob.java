@@ -8,6 +8,8 @@ import com.poldichen.movie.util.TimeUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -20,6 +22,8 @@ import java.util.*;
 @JobAnnotation
 public class MovieSingleJob {
 
+    private static final Logger logger = LoggerFactory.getLogger(MovieSingleJob.class);
+
     private static final String LENGTH_KEY = "長度: ";
     private static final String CODE_KEY = "識別碼: ";
     private static final String PUBLISH_DATE_KEY = "發行日期: ";
@@ -31,8 +35,9 @@ public class MovieSingleJob {
 
     public static void main(String[] args) {
 
+        MovieApiUtil.getAuth("poldi", "123456");
         for (int index = 1; index < 100; index++) {
-            String movieListUrl = "https://www.buscdn.cam/page/" + index;
+            String movieListUrl = "https://www.cdnbus.blog/page/" + index;
             parseMovieList(movieListUrl);
         }
     }
@@ -58,7 +63,6 @@ public class MovieSingleJob {
         systemLogParams.put("detail", "");
         MovieApiUtil.addSystemLog(systemLogParams);
     }
-
 
     public static void parseMovieDetail(String movieUrl, String movieCoverUrl) {
         Document doc;
@@ -96,7 +100,7 @@ public class MovieSingleJob {
         }
 
         // get code, publish_date, length, producer, publisher
-        String code = "0";
+        String code = "unknown";
         String publishDate = "";
         String length = "";
         String label = "";
@@ -238,10 +242,12 @@ public class MovieSingleJob {
     }
 
     public static void parseMovieList(String url) {
+        logger.info("parseMovieList, url: {}", url);
         Document doc;
         try {
             doc = FetchUtil.getUrlDoc(url);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             Map<String, Object> systemLogParams = new HashMap<>();
             systemLogParams.put("log_id", url);
             systemLogParams.put("level", "ERROR");
