@@ -47,6 +47,9 @@ public class FetchUtil {
 
     public static Document getUrlDocHttp(String url) throws Exception {
         Map<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+        headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        headers.put("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
         String response = HttpClientUtil.doGet(url, headers);
         Document doc = Jsoup.parse(response);
         return doc;

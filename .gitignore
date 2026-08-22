@@ -1,0 +1,19 @@
+# Build output
+target/
+*.class
+
+# Logs
+*.log
+*.log.*.gz
+
+# Downloaded pictures (local data, not source code)
+pictures/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
